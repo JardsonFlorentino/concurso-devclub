@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
@@ -34,9 +35,19 @@ const PARTICLE_SIZE = 0.85;
 const MAX_PARTICLE_BRIGHTNESS = 0.38;
 
 const FRAMING = {
-  desktop: { widthFraction: 0.42, centerFraction: 0.71 },  
+  desktop: { widthFraction: 0.42, centerFraction: 0.71 },
   mobile: { widthFraction: 0.68, centerFraction: 0.5 },
 };
+
+const INTRO_FRAMING = {
+  desktop: { widthFraction: 0.54, centerFraction: 0.5 },
+  mobile: { widthFraction: 0.82, centerFraction: 0.5 },
+};
+
+const INTRO_SCATTER_RADIUS = 180;
+const INTRO_CONVERGE_SECONDS = 1.0;
+const INTRO_HOLD_SECONDS = 0.6;
+const INTRO_REFRAME_SECONDS = 1.1;
 
 const TAP_SLOP_PX = 12;
 
@@ -147,12 +158,24 @@ async function ensureFontLoaded(fontFamily: string, text: string) {
 
 interface ParticleTextSceneProps {
   className?: string;
+  playIntro?: boolean;
+  onRevealStart?: () => void;
 }
 
-export function ParticleTextScene({ className }: ParticleTextSceneProps) {
+export function ParticleTextScene({
+  className,
+  playIntro = false,
+  onRevealStart,
+}: ParticleTextSceneProps) {
   const mountRef = useRef<HTMLDivElement | null>(null);
-  const [hintVisible, setHintVisible] = useState(true);
+  const [hintVisible, setHintVisible] = useState(!playIntro);
   const dismissHintRef = useRef(() => setHintVisible(false));
+  const revealHintRef = useRef(() => setHintVisible(true));
+  const onRevealStartRef = useRef(onRevealStart);
+
+  useEffect(() => {
+    onRevealStartRef.current = onRevealStart;
+  }, [onRevealStart]);
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -222,6 +245,9 @@ export function ParticleTextScene({ className }: ParticleTextSceneProps) {
       sampled.sort((a, b) => a.x - b.x);
 
       let time = 0;
+      let disintegrationStartTime = 0;
+      let disintegrationEnabled = true;
+      let positionLerpScale = 1;
       let shockwaves: Array<{
         t0: number;
         amplitude: number;
@@ -297,12 +323,23 @@ export function ParticleTextScene({ className }: ParticleTextSceneProps) {
         return texture;
       }
 
+      const introEnabled = playIntro && !prefersReducedMotion;
+
       for (let i = 0; i < particleCount; i++) {
         const i3 = i * 3;
         const home = getHomePosition(i);
-        positions[i3] = home.x;
-        positions[i3 + 1] = home.y;
-        positions[i3 + 2] = home.z;
+        if (introEnabled) {
+          const scatterPhi = Math.random() * Math.PI * 2;
+          const scatterTheta = Math.acos(2 * Math.random() - 1);
+          const scatterRadius = INTRO_SCATTER_RADIUS * (0.55 + Math.random() * 0.45);
+          positions[i3] = Math.sin(scatterTheta) * Math.cos(scatterPhi) * scatterRadius;
+          positions[i3 + 1] = Math.sin(scatterTheta) * Math.sin(scatterPhi) * scatterRadius;
+          positions[i3 + 2] = Math.cos(scatterTheta) * scatterRadius * 0.6;
+        } else {
+          positions[i3] = home.x;
+          positions[i3 + 1] = home.y;
+          positions[i3 + 2] = home.z;
+        }
         targetPositions[i3] = home.x;
         targetPositions[i3 + 1] = home.y;
         targetPositions[i3 + 2] = home.z;
@@ -367,24 +404,41 @@ export function ParticleTextScene({ className }: ParticleTextSceneProps) {
       };
       applyTheme(currentTheme);
 
+      const framingState = { progress: introEnabled ? 0 : 1 };
+      disintegrationEnabled = !introEnabled;
+      positionLerpScale = introEnabled ? 1.9 : 1;
+
       const applyFraming = () => {
         const stacked = usesStackedLayout();
-        const framing = stacked ? FRAMING.mobile : FRAMING.desktop;
-        controls.enabled = !stacked;
+        const target = stacked ? FRAMING.mobile : FRAMING.desktop;
+        const start = stacked ? INTRO_FRAMING.mobile : INTRO_FRAMING.desktop;
+        const blend = framingState.progress;
+
+        const widthFraction = THREE.MathUtils.lerp(
+          start.widthFraction,
+          target.widthFraction,
+          blend,
+        );
+        const centerFraction = THREE.MathUtils.lerp(
+          start.centerFraction,
+          target.centerFraction,
+          blend,
+        );
+
+        controls.enabled = !stacked && blend === 1;
         const vFov = THREE.MathUtils.degToRad(60);
         const aspect = width / height;
 
         const forWidth =
-          sample.halfWidth / (framing.widthFraction * Math.tan(vFov / 2) * aspect);
+          sample.halfWidth / (widthFraction * Math.tan(vFov / 2) * aspect);
         const forHeight = sample.halfHeight / (0.34 * Math.tan(vFov / 2));
         const distance = Math.max(forWidth, forHeight);
 
         camera.position.setLength(distance);
         camera.updateProjectionMatrix();
 
-        const shiftPx = (framing.centerFraction - 0.5) * width;
-        if (shiftPx === 0) {
-          
+        const shiftPx = (centerFraction - 0.5) * width;
+        if (Math.abs(shiftPx) < 0.5) {
           camera.clearViewOffset();
           camera.updateProjectionMatrix();
         } else {
@@ -556,8 +610,9 @@ export function ParticleTextScene({ className }: ParticleTextSceneProps) {
 
           const disintegrationCycleTime = 10.0;
           const particleCycleOffset = (i / particleCount) * disintegrationCycleTime * 0.5;
+          const cycleTime = disintegrationEnabled ? time - disintegrationStartTime : 0;
           const cycleProgress =
-            ((time * 0.6 + particleCycleOffset) % disintegrationCycleTime) /
+            ((cycleTime * 0.6 + particleCycleOffset) % disintegrationCycleTime) /
             disintegrationCycleTime;
 
           let disAmt = 0;
@@ -597,9 +652,10 @@ export function ParticleTextScene({ className }: ParticleTextSceneProps) {
             lerp = 0.045 + disAmt * 0.02;
           }
 
-          pos[i3] += (curTargetX - pos[i3]) * lerp;
-          pos[i3 + 1] += (curTargetY - pos[i3 + 1]) * lerp;
-          pos[i3 + 2] += (curTargetZ - pos[i3 + 2]) * lerp;
+          const appliedLerp = lerp * positionLerpScale;
+          pos[i3] += (curTargetX - pos[i3]) * appliedLerp;
+          pos[i3 + 1] += (curTargetY - pos[i3 + 1]) * appliedLerp;
+          pos[i3 + 2] += (curTargetZ - pos[i3 + 2]) * appliedLerp;
 
           const { color: baseColor, size } = getAttributesForParticle(i, palette);
           let bright =
@@ -633,6 +689,28 @@ export function ParticleTextScene({ className }: ParticleTextSceneProps) {
         }
       }
 
+      let introTimeline: gsap.core.Timeline | null = null;
+      let introStarted = false;
+
+      const startIntroSequence = () => {
+        introTimeline = gsap.timeline();
+        introTimeline
+          .to(framingState, {
+            progress: 1,
+            duration: INTRO_REFRAME_SECONDS,
+            ease: "power3.inOut",
+            delay: INTRO_CONVERGE_SECONDS + INTRO_HOLD_SECONDS,
+            onStart: () => onRevealStartRef.current?.(),
+            onUpdate: applyFraming,
+          })
+          .add(() => {
+            revealHintRef.current();
+            disintegrationStartTime = time;
+            disintegrationEnabled = true;
+            positionLerpScale = 1;
+          });
+      };
+
       function animate() {
         raf = requestAnimationFrame(animate);
         time += 0.02;
@@ -647,6 +725,11 @@ export function ParticleTextScene({ className }: ParticleTextSceneProps) {
 
         updateParticles();
         composer.render();
+
+        if (introEnabled && !introStarted) {
+          introStarted = true;
+          startIntroSequence();
+        }
       }
 
       if (prefersReducedMotion) {
@@ -657,6 +740,7 @@ export function ParticleTextScene({ className }: ParticleTextSceneProps) {
       }
 
       disposeScene = () => {
+        introTimeline?.kill();
         cancelAnimationFrame(raf);
         window.removeEventListener("resize", onResize);
         canvasEl.removeEventListener("pointerdown", onPointerDown);
@@ -683,7 +767,7 @@ export function ParticleTextScene({ className }: ParticleTextSceneProps) {
       disposed = true;
       disposeScene?.();
     };
-  }, []);
+  }, [playIntro]);
 
   return (
     <div className={`relative ${className ?? ""}`}>

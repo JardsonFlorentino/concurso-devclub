@@ -56,6 +56,7 @@ html[data-theme] * {
   --color-background-deep: var(--black-deep);
   --color-black-dark: var(--black-dark);
   --color-foreground: var(--white-light);
+  --color-white-light: var(--white-light);
   --color-accent-1: var(--accent-1);
   --color-accent-2: var(--accent-2);
   --color-accent-2-surface: var(--accent-2-surface);
@@ -354,4 +355,37 @@ h3 {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+html.has-custom-cursor,
+html.has-custom-cursor a,
+html.has-custom-cursor button,
+html.has-custom-cursor [role="button"] {
+  cursor: none;
+}
+
+.nav-link {
+  position: relative;
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 1px;
+  background: var(--accent-1);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s var(--ease-standard);
+}
+
+.nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+[data-intro="pending"] .hero-reveal,
+[data-intro="pending"] header {
+  opacity: 0;
 }

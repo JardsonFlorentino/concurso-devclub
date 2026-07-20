@@ -5,6 +5,7 @@ export function SectionPlaceholder({ section }: { section: SectionMeta }) {
   return (
     <section
       id={section.id}
+      data-cursor={section.cursorZone}
       className="flex min-h-[60vh] items-center justify-center border-b border-white/5 px-6 py-[120px]"
     >
       <div className="flex items-baseline gap-4">

@@ -3,10 +3,11 @@
 import { useEffect } from "react";
 import gsap from "gsap";
 import { usePrefersReducedMotion } from "./usePrefersReducedMotion";
-
+import { useIntroPhase } from "./useIntroPhase";
 
 export function useHeroReveal(scopeRef: React.RefObject<HTMLElement | null>) {
   const prefersReducedMotion = usePrefersReducedMotion();
+  const introPhase = useIntroPhase();
 
   useEffect(() => {
     const scope = scopeRef.current;
@@ -14,6 +15,11 @@ export function useHeroReveal(scopeRef: React.RefObject<HTMLElement | null>) {
     if (prefersReducedMotion) return;
 
     const context = gsap.context(() => {
+      if (introPhase === "intro") {
+        gsap.set(".hero-reveal", { opacity: 0, y: 28 });
+        return;
+      }
+
       gsap.fromTo(
         ".hero-reveal",
         { opacity: 0, y: 28 },
@@ -28,5 +34,5 @@ export function useHeroReveal(scopeRef: React.RefObject<HTMLElement | null>) {
     }, scope);
 
     return () => context.revert();
-  }, [scopeRef, prefersReducedMotion]);
+  }, [scopeRef, prefersReducedMotion, introPhase]);
 }

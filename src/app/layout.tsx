@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { Header } from "@/components/Header";
+import { CustomCursor } from "@/components/CustomCursor";
 import "./globals.css";
 
 const inter = Inter({
@@ -23,8 +25,20 @@ export default function RootLayout({
 }>) {
   return (
     // data-theme já vem no HTML do servidor para não haver flash de cor na hidratação.
-    <html lang="pt-BR" data-theme="devclub" className={inter.variable}>
+    <html
+      lang="pt-BR"
+      data-theme="devclub"
+      className={inter.variable}
+      suppressHydrationWarning
+    >
       <body className="bg-background text-foreground">
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var s=sessionStorage.getItem('devclub:intro-seen')==='1';var r=matchMedia('(prefers-reduced-motion: reduce)').matches;if(!s&&!r){document.documentElement.setAttribute('data-intro','pending')}}catch(e){}`,
+          }}
+        />
+        <CustomCursor />
+        <Header />
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>

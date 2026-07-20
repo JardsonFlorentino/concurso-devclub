@@ -8,6 +8,7 @@ import { AvatarGroup } from "@/components/ui/AvatarGroup";
 import { useTypewriter } from "@/hooks/useTypewriter";
 import { useHeroReveal } from "@/hooks/useHeroReveal";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { introPlaybackEnabled, markRevealed } from "@/hooks/useIntroPhase";
 import {
   HERO_BADGE,
   HERO_CTA,
@@ -47,7 +48,11 @@ export function HeroSection() {
 
       
       <div className="relative z-[1] h-[52vh] w-full shrink-0 lg:absolute lg:inset-0 lg:h-full">
-        <ParticleTextScene className="h-full w-full" />
+        <ParticleTextScene
+          className="h-full w-full"
+          playIntro={introPlaybackEnabled}
+          onRevealStart={markRevealed}
+        />
       </div>
 
      
