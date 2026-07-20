@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="158.37224"
+   style="display:block"
+   viewBox="0 0 158.37224 217.5451"
+   version="1.1"
+   id="svg4"
+   sodipodi:docname="uber-logo-novo.svg"
+   height="217.5451"
+   inkscape:version="0.92.2 (5c3e80d, 2017-08-06)">
+  <metadata
+     id="metadata10">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs8" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1600"
+     inkscape:window-height="837"
+     id="namedview6"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="2.0584416"
+     inkscape:cx="217.70666"
+     inkscape:cy="69.780018"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg4" />
+  <path
+     d="m 9.0596088,31.104 c 0,8.136 5.3280002,13.392 12.3840002,13.392 6.984,0 12.384,-5.4 12.384,-13.392 V 0 h 7.56 v 50.4 h -7.488 v -4.68 c -3.384,3.528 -8.064,5.544 -13.32,5.544 C 9.7796088,51.264 1.4996088,43.416 1.4996088,31.536 V 0 h 7.56 z M 48.803609,50.4 V 0 h 7.272 v 18.36 a 18.156,18.156 0 0 1 13.032,-5.472 c 10.8,0 19.296,8.568 19.296,19.224 0,10.584 -8.496,19.152 -19.296,19.152 -5.112,0 -9.792,-2.088 -13.104,-5.472 V 50.4 Z m 7.128,-18.288 c 0,7.056 5.616,12.744 12.672,12.744 6.912,0 12.6,-5.688 12.6,-12.744 0,-7.128 -5.688,-12.744 -12.6,-12.744 -6.984,0 -12.672,5.616 -12.672,12.744 z m 36.792,-0.072 c 0,-10.368 8.136001,-19.08 18.864001,-19.08 10.584,0 18.36,8.136 18.36,19.08 v 2.376 h -29.88 c 1.008,5.976 5.976,10.44 12.168,10.44 4.248,0 7.848,-1.728 10.584,-5.4 l 5.256,3.888 c -3.672,4.896 -9.144,7.848 -15.84,7.848 -11.016,0 -19.512001,-8.208 -19.512001,-19.152 z M 111.44361,19.296 c -5.4,0 -9.936,3.744 -11.232,9.36 h 22.392 c -1.224,-5.616 -5.76,-9.36 -11.16,-9.36 z m 42.696,0.864 h -3.024 c -4.752,0 -8.208,3.672 -8.208,9.36 V 50.4 h -7.272 V 13.68 h 7.2 v 4.536 c 1.8,-2.952 4.752,-4.824 8.784,-4.824 h 2.52 z"
+     id="path2"
+     inkscape:export-filename="C:\Users\suitedoalex\sites\uber-logo-14.png"
+     inkscape:export-xdpi="31.446541"
+     inkscape:export-ydpi="31.446541"
+     inkscape:connector-curvature="0"
+     style="fill:currentColor;fill-rule:evenodd" />
+  <rect
+     style="fill:#000000;fill-rule:evenodd"
+     id="rect834"
+     width="158.37224"
+     height="158.37224"
+     x="0"
+     y="59.172871"
+     inkscape:export-filename="C:\Users\suitedoalex\sites\uber-logo-15.png"
+     inkscape:export-xdpi="30.308342"
+     inkscape:export-ydpi="30.308342" />
+  <path
+     inkscape:connector-curvature="0"
+     style="display:block;fill:#ffffff;fill-rule:evenodd;stroke-width:0.83450061"
+     d="m 21.805861,142.92538 c 0,6.78949 4.446219,11.17563 10.334455,11.17563 5.828152,0 10.334455,-4.50631 10.334455,-11.17563 v -25.95631 h 6.308825 v 42.05883 h -6.248741 v -3.90546 c -2.82395,2.94411 -6.729412,4.62647 -11.115548,4.62647 -9.012606,0 -15.922269,-6.54916 -15.922269,-16.46303 v -26.31681 h 6.308823 z m 33.166391,16.10252 v -42.05883 h 6.068488 v 15.32143 a 15.151193,15.151193 0 0 1 10.875212,-4.56639 c 9.012606,0 16.102523,7.15 16.102523,16.04244 0,8.83236 -7.089917,15.98236 -16.102523,15.98236 -4.265967,0 -8.17143,-1.74244 -10.935296,-4.56639 v 3.84538 z m 5.94832,-15.26135 c 0,5.88824 4.686556,10.63488 10.574792,10.63488 5.768068,0 10.514707,-4.74664 10.514707,-10.63488 0,-5.94832 -4.746639,-10.63487 -10.514707,-10.63487 -5.828152,0 -10.574792,4.68655 -10.574792,10.63487 z m 30.702946,-0.0601 c 0,-8.6521 6.789497,-15.92227 15.742012,-15.92227 8.83235,0 15.32143,6.78949 15.32143,15.92227 v 1.98277 H 97.75209 c 0.841177,4.98698 4.98697,8.71219 10.1542,8.71219 3.54495,0 6.54916,-1.44202 8.83235,-4.5063 l 4.38614,3.24453 c -3.06429,4.08572 -7.63068,6.54916 -13.21849,6.54916 -9.192855,0 -16.282772,-6.84958 -16.282772,-15.98235 z m 15.621842,-10.63488 c -4.5063,0 -8.291587,3.12437 -9.373102,7.81093 h 18.686132 c -1.02143,-4.68656 -4.80673,-7.81093 -9.31303,-7.81093 z m 35.62984,0.72101 h -2.52353 c -3.96555,0 -6.84958,3.06429 -6.84958,7.81093 v 17.42437 h -6.06849 v -30.64286 h 6.00841 v 3.78529 c 1.5021,-2.46344 3.96554,-4.02563 7.33025,-4.02563 h 2.10294 z"
+     id="path2-1"
+     inkscape:export-filename="C:\Users\suitedoalex\sites\uber-logo-15.png"
+     inkscape:export-xdpi="30.308342"
+     inkscape:export-ydpi="30.308342" />
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-weight:normal;font-size:42.66666794px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+     x="-0.97160882"
+     y="272.92682"
+     id="text859"><tspan
+       sodipodi:role="line"
+       id="tspan857"
+       x="-0.97160882"
+       y="272.92682">LOGODOWNLOAD.ORG</tspan></text>
+</svg>

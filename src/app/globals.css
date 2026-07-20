@@ -1,45 +1,28 @@
 @import "tailwindcss";
 
-/**
- * Paleta base — cores fixas da marca DevClub.
- * Os acentos NÃO são usados diretamente pelos componentes: eles passam pelas
- * variáveis --accent-1 / --accent-2, que cada tema redefine (ver blocos abaixo).
- */
+
 :root {
   --black-dark: #111012;
-  --black-deep: #0b0a0c; /* seções mais escuras (ex.: Tecnologias) */
+  --black-deep: #0b0a0c; 
   --white-light: #f5f5f7;
 
   --green-normal: #39d353;
   --purple-normal: #8532f2;
 
-  /* Cinzas derivados do preto base, para manter a neutralidade fria da paleta */
   --gray-300: #a1a1aa;
   --gray-400: #71717a;
   --gray-500: #52525b;
 
-  /* Tokens de movimento — centralizados para garantir consistência (regra do briefing) */
-  --ease-standard: cubic-bezier(0.16, 1, 0.3, 1); /* equivalente CSS do power3.out */
+  --ease-standard: cubic-bezier(0.16, 1, 0.3, 1);
   --duration-standard: 0.8s;
   --radius-standard: 14px;
 
-  /* Fallback: se nenhum data-theme for aplicado, vale o tema devclub */
   --accent-1: var(--green-normal);
   --accent-2: var(--purple-normal);
   --accent-2-surface: var(--purple-normal);
 }
 
-/**
- * Temas de acento. A troca acontece via atributo data-theme no <html>.
- * Só os tokens de acento mudam: como todo o site lê deles, uma única troca de
- * atributo repinta a página inteira.
- *
- * --accent-2 vale para texto e detalhes (precisa de contraste sobre o fundo escuro);
- * --accent-2-surface vale para preenchimentos, bordas e fundos translúcidos, onde
- * um tom saturado e escuro funciona melhor. Nos temas em que a mesma cor atende
- * aos dois papéis os valores coincidem — o token existe para que qualquer tema
- * possa divergir sem os componentes precisarem saber disso.
- */
+
 [data-theme="devclub"] {
   --accent-1: #39d353;
   --accent-2: #8532f2;
@@ -58,10 +41,7 @@
   --accent-2-surface: #6b21d8;
 }
 
-/**
- * Transição global de 1s nas cores para a troca de tema ser suave.
- * Limitada a propriedades de cor para não interferir nas animações do GSAP.
- */
+
 html[data-theme] * {
   transition:
     color 1s var(--ease-standard),
@@ -71,10 +51,10 @@ html[data-theme] * {
     stroke 1s var(--ease-standard);
 }
 
-/* Expõe os tokens ao Tailwind (v4 configura via CSS, sem tailwind.config.js) */
 @theme inline {
   --color-background: var(--black-dark);
   --color-background-deep: var(--black-deep);
+  --color-black-dark: var(--black-dark);
   --color-foreground: var(--white-light);
   --color-accent-1: var(--accent-1);
   --color-accent-2: var(--accent-2);
@@ -93,23 +73,278 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-/* Títulos de seção: tracking negativo é regra de elegância do briefing */
 h1,
 h2,
 h3 {
   letter-spacing: -0.04em;
 }
 
-/* Foco visível preservado para acessibilidade */
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 42s linear infinite;
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+}
+
+.animate-pulse-dot {
+  animation: pulse-dot 2.4s var(--ease-standard) infinite;
+}
+
+@keyframes caret-blink {
+  0%,
+  45% {
+    opacity: 1;
+  }
+  50%,
+  95% {
+    opacity: 0;
+  }
+}
+
+.animate-caret {
+  animation: caret-blink 1.1s steps(1, end) infinite;
+}
+
+.aurora-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(100px);
+  will-change: transform;
+}
+
+
+.aurora-blob--1 {
+  width: 48vw;
+  height: 48vh;
+  left: -10%;
+  top: 6%;
+  opacity: 0.4;
+  background: var(--accent-1);
+  animation: aurora-drift-a 17s var(--ease-standard) infinite alternate;
+}
+
+.aurora-blob--2 {
+  width: 42vw;
+  height: 46vh;
+  left: 2%;
+  top: 40%;
+  opacity: 0.4;
+  background: var(--accent-2);
+  animation: aurora-drift-b 21s var(--ease-standard) infinite alternate;
+}
+
+.aurora-blob--3 {
+  width: 50vw;
+  height: 50vh;
+  left: 42%;
+  top: 2%;
+  opacity: 0.24;
+  background: var(--accent-1);
+  animation: aurora-drift-c 15s var(--ease-standard) infinite alternate;
+}
+
+.aurora-blob--4 {
+  width: 46vw;
+  height: 50vh;
+  left: 54%;
+  top: 36%;
+  opacity: 0.24;
+  background: var(--accent-2);
+  animation: aurora-drift-d 19s var(--ease-standard) infinite alternate;
+}
+
+.aurora-blob--5 {
+  width: 34vw;
+  height: 34vh;
+  left: 30%;
+  top: 44%;
+  opacity: 0.18;
+  background: var(--accent-1);
+  animation: aurora-drift-e 13s var(--ease-standard) infinite alternate;
+}
+
+@keyframes aurora-drift-a {
+  from {
+    transform: translate3d(-6%, -4%, 0) scale(1);
+  }
+  to {
+    transform: translate3d(8%, 6%, 0) scale(1.12);
+  }
+}
+
+@keyframes aurora-drift-b {
+  from {
+    transform: translate3d(5%, 4%, 0) scale(1.08);
+  }
+  to {
+    transform: translate3d(-7%, -6%, 0) scale(0.95);
+  }
+}
+
+@keyframes aurora-drift-c {
+  from {
+    transform: translate3d(-4%, 6%, 0) scale(0.95);
+  }
+  to {
+    transform: translate3d(6%, -5%, 0) scale(1.15);
+  }
+}
+
+@keyframes aurora-drift-d {
+  from {
+    transform: translate3d(4%, -5%, 0) scale(1.1);
+  }
+  to {
+    transform: translate3d(-6%, 5%, 0) scale(0.96);
+  }
+}
+
+@keyframes aurora-drift-e {
+  from {
+    transform: translate3d(-7%, -3%, 0) scale(1.05);
+  }
+  to {
+    transform: translate3d(5%, 7%, 0) scale(0.92);
+  }
+}
+
+
+@media (max-width: 1023px) {
+  .aurora-blob {
+    filter: blur(70px);
+  }
+
+  .aurora-blob--1 {
+    width: 78vw;
+    height: 22vh;
+    left: -6%;
+    top: 2%;
+  }
+
+  .aurora-blob--2 {
+    width: 70vw;
+    height: 20vh;
+    left: 24%;
+    top: 20%;
+  }
+
+  .aurora-blob--3 {
+    width: 74vw;
+    height: 22vh;
+    left: -4%;
+    top: 40%;
+  }
+
+  .aurora-blob--4 {
+    width: 68vw;
+    height: 22vh;
+    left: 28%;
+    top: 58%;
+  }
+
+  .aurora-blob--5 {
+    width: 56vw;
+    height: 18vh;
+    left: 10%;
+    top: 76%;
+  }
+}
+
+
+.hero-text-veil {
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--black-dark) 32%, transparent) 0%,
+    color-mix(in srgb, var(--black-dark) 24%, transparent) 28%,
+    color-mix(in srgb, var(--black-dark) 10%, transparent) 46%,
+    transparent 60%
+  );
+}
+
+@media (max-width: 1023px) {
+  .hero-text-veil {
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      transparent 38%,
+      color-mix(in srgb, var(--black-dark) 26%, transparent) 52%,
+      color-mix(in srgb, var(--black-dark) 42%, transparent) 100%
+    );
+  }
+}
+
+.hero-vignette {
+  background: radial-gradient(
+    ellipse 78% 68% at 64% 50%,
+    transparent 0%,
+    transparent 42%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+}
+
+@media (max-width: 1023px) {
+  .hero-vignette {
+    background: radial-gradient(
+      ellipse 90% 40% at 50% 24%,
+      transparent 0%,
+      transparent 45%,
+      rgba(0, 0, 0, 0.5) 100%
+    );
+  }
+}
+
+.hero-grain {
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 180px 180px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-grain {
+    will-change: auto;
+  }
+}
+
+
+.logo-mark {
+  filter: brightness(0) invert(1);
+  opacity: 0.55;
+  transition:
+    filter 0.3s var(--ease-standard),
+    opacity 0.3s var(--ease-standard);
+}
+
+.logo-mark:hover {
+  filter: none;
+  opacity: 1;
+}
+
 :focus-visible {
   outline: 2px solid var(--accent-1);
   outline-offset: 3px;
 }
 
-/**
- * prefers-reduced-motion: desliga transições e animações declarativas.
- * As animações do GSAP são desligadas em JS (o CSS não alcança tweens).
- */
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

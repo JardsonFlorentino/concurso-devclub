@@ -1,10 +1,6 @@
 import type { SectionMeta } from "@/data/sections";
 
-/**
- * Andaime temporário da Etapa 0: torna o esqueleto da página visível e
- * conferível antes das seções reais existirem. Cada seção construída nas
- * próximas etapas substitui um destes.
- */
+
 export function SectionPlaceholder({ section }: { section: SectionMeta }) {
   return (
     <section

@@ -1,8 +1,4 @@
-/**
- * Ordem canônica das seções da página.
- * Fica aqui (e não no JSX) para que a página e a navegação do header leiam da
- * mesma fonte — evita âncoras quebradas quando a ordem mudar.
- */
+
 export type SectionId =
   | "hero"
   | "manifesto"
