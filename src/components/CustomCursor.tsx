@@ -5,15 +5,15 @@ import { useFinePointer } from "@/hooks/useFinePointer";
 
 type CursorState = "default" | "hover" | "drag" | "expand";
 
-const RING_LERP = 0.16;
-const DOT_LERP = 0.55;
+const RING_LERP = 0.14;
+const DOT_LERP = 0.6;
 const INTERACTIVE_SELECTOR = "a, button, [role='button'], input, textarea, select";
 
 const RING_STYLES: Record<CursorState, string> = {
-  default: "h-8 w-8 border-white-light/70",
-  hover: "h-14 w-14 border-white-light",
+  default: "h-7 w-7 border-white-light/55",
+  hover: "h-12 w-12 border-white-light/85",
   drag: "h-auto w-auto border-white-light bg-white-light px-4 py-2.5",
-  expand: "h-28 w-28 border-white-light/40 bg-white-light/25",
+  expand: "h-12 w-12 border-white-light/15 bg-white-light/10",
 };
 
 export function CustomCursor() {
@@ -85,7 +85,7 @@ export function CustomCursor() {
     <div aria-hidden="true" className="pointer-events-none fixed inset-0 z-[90] mix-blend-difference">
       <div
         ref={ringRef}
-        className={`absolute left-0 top-0 flex items-center justify-center rounded-full border transition-[width,height,padding,background-color,border-color,opacity] duration-[350ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${RING_STYLES[state]}`}
+        className={`absolute left-0 top-0 flex items-center justify-center rounded-full border transition-[width,height,padding,background-color,border-color,opacity] duration-[420ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${RING_STYLES[state]}`}
       >
         {state === "drag" && (
           <span className="whitespace-nowrap text-xs font-semibold tracking-wide text-black-dark">
@@ -95,7 +95,7 @@ export function CustomCursor() {
       </div>
       <div
         ref={dotRef}
-        className={`absolute left-0 top-0 h-1.5 w-1.5 rounded-full bg-white-light transition-opacity duration-200 ${
+        className={`absolute left-0 top-0 h-[5px] w-[5px] rounded-full bg-white-light transition-opacity duration-300 ${
           dotHidden ? "opacity-0" : "opacity-100"
         }`}
       />

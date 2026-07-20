@@ -389,3 +389,32 @@ html.has-custom-cursor [role="button"] {
 [data-intro="pending"] header {
   opacity: 0;
 }
+
+@keyframes manifesto-glow {
+  0%,
+  100% {
+    text-shadow: 0 0 24px color-mix(in srgb, var(--accent-1) 30%, transparent);
+  }
+  50% {
+    text-shadow: 0 0 46px color-mix(in srgb, var(--accent-1) 55%, transparent);
+  }
+}
+
+.sweep-char {
+  color: var(--white-light);
+}
+
+.manifesto-highlight .sweep-char {
+  color: var(--accent-1);
+}
+
+.manifesto-highlight.is-lit {
+  animation: manifesto-glow 4.2s var(--ease-standard) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .manifesto-highlight.is-lit {
+    animation: none;
+    text-shadow: 0 0 30px color-mix(in srgb, var(--accent-1) 40%, transparent);
+  }
+}
