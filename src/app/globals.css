@@ -1,26 +1,122 @@
 @import "tailwindcss";
 
+/**
+ * Paleta base — cores fixas da marca DevClub.
+ * Os acentos NÃO são usados diretamente pelos componentes: eles passam pelas
+ * variáveis --accent-1 / --accent-2, que cada tema redefine (ver blocos abaixo).
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --black-dark: #111012;
+  --black-deep: #0b0a0c; /* seções mais escuras (ex.: Tecnologias) */
+  --white-light: #f5f5f7;
+
+  --green-normal: #39d353;
+  --purple-normal: #8532f2;
+
+  /* Cinzas derivados do preto base, para manter a neutralidade fria da paleta */
+  --gray-300: #a1a1aa;
+  --gray-400: #71717a;
+  --gray-500: #52525b;
+
+  /* Tokens de movimento — centralizados para garantir consistência (regra do briefing) */
+  --ease-standard: cubic-bezier(0.16, 1, 0.3, 1); /* equivalente CSS do power3.out */
+  --duration-standard: 0.8s;
+  --radius-standard: 14px;
+
+  /* Fallback: se nenhum data-theme for aplicado, vale o tema devclub */
+  --accent-1: var(--green-normal);
+  --accent-2: var(--purple-normal);
+  --accent-2-surface: var(--purple-normal);
 }
 
+/**
+ * Temas de acento. A troca acontece via atributo data-theme no <html>.
+ * Só os tokens de acento mudam: como todo o site lê deles, uma única troca de
+ * atributo repinta a página inteira.
+ *
+ * --accent-2 vale para texto e detalhes (precisa de contraste sobre o fundo escuro);
+ * --accent-2-surface vale para preenchimentos, bordas e fundos translúcidos, onde
+ * um tom saturado e escuro funciona melhor. Nos temas em que a mesma cor atende
+ * aos dois papéis os valores coincidem — o token existe para que qualquer tema
+ * possa divergir sem os componentes precisarem saber disso.
+ */
+[data-theme="devclub"] {
+  --accent-1: #39d353;
+  --accent-2: #8532f2;
+  --accent-2-surface: #8532f2;
+}
+
+[data-theme="matrix"] {
+  --accent-1: #39d353;
+  --accent-2: #7ee897;
+  --accent-2-surface: #16803c;
+}
+
+[data-theme="deep-purple"] {
+  --accent-1: #a855f7;
+  --accent-2: #a855f7;
+  --accent-2-surface: #6b21d8;
+}
+
+/**
+ * Transição global de 1s nas cores para a troca de tema ser suave.
+ * Limitada a propriedades de cor para não interferir nas animações do GSAP.
+ */
+html[data-theme] * {
+  transition:
+    color 1s var(--ease-standard),
+    background-color 1s var(--ease-standard),
+    border-color 1s var(--ease-standard),
+    fill 1s var(--ease-standard),
+    stroke 1s var(--ease-standard);
+}
+
+/* Expõe os tokens ao Tailwind (v4 configura via CSS, sem tailwind.config.js) */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-background: var(--black-dark);
+  --color-background-deep: var(--black-deep);
+  --color-foreground: var(--white-light);
+  --color-accent-1: var(--accent-1);
+  --color-accent-2: var(--accent-2);
+  --color-accent-2-surface: var(--accent-2-surface);
+  --color-gray-300: var(--gray-300);
+  --color-gray-400: var(--gray-400);
+  --color-gray-500: var(--gray-500);
+  --font-sans: var(--font-inter);
+  --radius-standard: var(--radius-standard);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--black-dark);
+  color: var(--white-light);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Títulos de seção: tracking negativo é regra de elegância do briefing */
+h1,
+h2,
+h3 {
+  letter-spacing: -0.04em;
+}
+
+/* Foco visível preservado para acessibilidade */
+:focus-visible {
+  outline: 2px solid var(--accent-1);
+  outline-offset: 3px;
+}
+
+/**
+ * prefers-reduced-motion: desliga transições e animações declarativas.
+ * As animações do GSAP são desligadas em JS (o CSS não alcança tweens).
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
