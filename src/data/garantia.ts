@@ -34,6 +34,6 @@ export const GARANTIA_PASSOS: PassoGarantia[] = [
   {
     title: "Não gostou? Mande um e-mail e receba 100% de volta",
     description:
-      "Um e-mail basta. Devolvemos o valor integral e você não precisa justificar o motivo.",
+      "Um e-mail basta, e o prazo de reembolso ainda se estende além dos 7 dias. Devolvemos o valor integral, sem você justificar o motivo.",
   },
 ];

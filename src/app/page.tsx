@@ -11,6 +11,7 @@ import { BonusSection } from "@/components/sections/BonusSection";
 import { MecSection } from "@/components/sections/MecSection";
 import { MercadoSection } from "@/components/sections/MercadoSection";
 import { GarantiaSection } from "@/components/sections/GarantiaSection";
+import { ReembolsoSection } from "@/components/sections/ReembolsoSection";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { CtaSection } from "@/components/sections/CtaSection";
 import { FooterSection } from "@/components/sections/FooterSection";
@@ -32,6 +33,7 @@ export default function Home() {
         <MecSection />
         <MercadoSection />
         <GarantiaSection />
+        <ReembolsoSection />
         <FaqSection />
         <CtaSection />
       </main>
