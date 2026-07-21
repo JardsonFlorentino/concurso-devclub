@@ -5,7 +5,7 @@ export const ALUNOS_TITLE = {
 };
 
 export const ALUNOS_SUBTITLE =
-  "Passe o mouse nos nomes e veja quem já fez essa travessia.";
+  "Alguns dos nomes que fizeram a travessia do zero à contratação.";
 
 export interface Aluno {
   name: string;
