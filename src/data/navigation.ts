@@ -8,7 +8,7 @@ export interface NavLink {
 export const NAV_LINKS: NavLink[] = [
   { label: "Formações", href: "#formacoes" },
   { label: "Quem somos", href: "#manifesto" },
-  { label: "Alunos", href: "#alunos" },
+  { label: "Alunos", href: "#comunidade" },
   { label: "Tutores", href: "#tutores" },
 ];
 

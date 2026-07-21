@@ -568,6 +568,58 @@ html.has-custom-cursor [role="button"] {
   }
 }
 
+.projeto-media--accent-1 {
+  background:
+    radial-gradient(
+      120% 100% at 20% 0%,
+      color-mix(in srgb, var(--accent-1) 34%, transparent) 0%,
+      transparent 62%
+    ),
+    linear-gradient(140deg, #16181a 0%, #0d0e10 100%);
+}
+
+.projeto-media--accent-2 {
+  background:
+    radial-gradient(
+      120% 100% at 80% 0%,
+      color-mix(in srgb, var(--accent-2) 38%, transparent) 0%,
+      transparent 62%
+    ),
+    linear-gradient(140deg, #17151c 0%, #0d0c10 100%);
+}
+
+.projeto-media,
+.tutor-media {
+  transition:
+    transform 0.7s var(--ease-standard),
+    filter 0.7s var(--ease-standard);
+}
+
+.tutor-media {
+  filter: grayscale(1);
+}
+
+.group:hover .projeto-media {
+  transform: scale(1.05);
+}
+
+.group:hover .tutor-media {
+  transform: scale(1.05);
+  filter: grayscale(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme] .projeto-media,
+  html[data-theme] .tutor-media {
+    transition: none;
+  }
+
+  html[data-theme] .group:hover .projeto-media,
+  html[data-theme] .group:hover .tutor-media {
+    transform: none;
+  }
+}
+
 .tech-spotlight-layer {
   -webkit-mask-image: radial-gradient(
     300px circle at var(--mouse-x, -9999px) var(--mouse-y, -9999px),

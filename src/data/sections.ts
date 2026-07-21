@@ -6,9 +6,14 @@ export type SectionId =
   | "tecnologias"
   | "alem-do-codigo"
   | "plataforma"
-  | "alunos"
-  | "empresas"
+  | "projetos"
+  | "comunidade"
   | "tutores"
+  | "bonus"
+  | "mec"
+  | "mercado"
+  | "garantia"
+  | "faq"
   | "cta"
   | "footer";
 
@@ -27,9 +32,14 @@ export const SECTIONS: SectionMeta[] = [
   { id: "tecnologias", label: "Tecnologias" },
   { id: "alem-do-codigo", label: "Além do Código" },
   { id: "plataforma", label: "Plataforma" },
-  { id: "alunos", label: "Alunos" },
-  { id: "empresas", label: "Empresas" },
+  { id: "projetos", label: "Projetos Reais" },
+  { id: "comunidade", label: "Comunidade" },
   { id: "tutores", label: "Tutores" },
+  { id: "bonus", label: "Módulos Bônus" },
+  { id: "mec", label: "MEC / Diplomas" },
+  { id: "mercado", label: "O mercado paga bem?" },
+  { id: "garantia", label: "Garantia" },
+  { id: "faq", label: "FAQ" },
   { id: "cta", label: "CTA" },
   { id: "footer", label: "Footer" },
 ];

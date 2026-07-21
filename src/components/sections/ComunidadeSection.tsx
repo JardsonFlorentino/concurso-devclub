@@ -7,8 +7,8 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import {
   ALUNOS,
-  ALUNOS_SUBTITLE,
-  ALUNOS_TITLE,
+  COMUNIDADE_SUBTITLE,
+  COMUNIDADE_TITLE,
   DEPOIMENTOS,
 } from "@/data/alunos";
 
@@ -16,7 +16,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const EASE_STANDARD = "ease-[cubic-bezier(0.16,1,0.3,1)]";
 
-export function AlunosSection() {
+export function ComunidadeSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -46,7 +46,7 @@ export function AlunosSection() {
 
   return (
     <section
-      id="alunos"
+      id="comunidade"
       ref={sectionRef}
       className="relative bg-background py-[130px]"
     >
@@ -57,14 +57,14 @@ export function AlunosSection() {
       </div>
 
       <div className="relative z-10 mx-auto max-w-[1180px] px-6 md:px-10">
-        <header className="flex max-w-[24ch] flex-col gap-4">
-          <h2 className="alunos-reveal text-[clamp(2rem,4.2vw,3.75rem)] font-semibold leading-[1.12] tracking-[-0.02em] text-white-light">
-            {ALUNOS_TITLE.before}
-            <span className="text-accent-1">{ALUNOS_TITLE.highlight}</span>
-            {ALUNOS_TITLE.after}
+        <header className="flex flex-col gap-4">
+          <h2 className="alunos-reveal max-w-[20ch] text-[clamp(2rem,4.2vw,3.75rem)] font-semibold leading-[1.12] tracking-[-0.03em] text-white-light">
+            {COMUNIDADE_TITLE.before}
+            <span className="text-accent-1">{COMUNIDADE_TITLE.highlight}</span>
+            {COMUNIDADE_TITLE.after}
           </h2>
-          <p className="alunos-reveal text-[0.9375rem] leading-relaxed text-gray-300">
-            {ALUNOS_SUBTITLE}
+          <p className="alunos-reveal max-w-[54ch] text-[0.9375rem] leading-relaxed text-gray-300">
+            {COMUNIDADE_SUBTITLE}
           </p>
         </header>
 

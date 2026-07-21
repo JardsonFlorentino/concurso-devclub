@@ -1,10 +1,10 @@
-export const ALUNOS_TITLE = {
-  before: "Saíram do zero. Hoje estão ",
-  highlight: "contratados",
-  after: ".",
+export const COMUNIDADE_TITLE = {
+  before: "Milhares de vidas ",
+  highlight: "TRANSFORMADAS",
+  after: " dentro da nossa Comunidade",
 };
 
-export const ALUNOS_SUBTITLE =
+export const COMUNIDADE_SUBTITLE =
   "Alguns dos nomes que fizeram a travessia do zero à contratação.";
 
 export interface Aluno {

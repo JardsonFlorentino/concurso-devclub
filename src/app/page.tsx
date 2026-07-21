@@ -4,7 +4,9 @@ import { FormacoesSection } from "@/components/sections/FormacoesSection";
 import { TecnologiasSection } from "@/components/sections/TecnologiasSection";
 import { AlemDoCodigoSection } from "@/components/sections/AlemDoCodigoSection";
 import { PlataformaSection } from "@/components/sections/PlataformaSection";
-import { AlunosSection } from "@/components/sections/AlunosSection";
+import { ProjetosSection } from "@/components/sections/ProjetosSection";
+import { ComunidadeSection } from "@/components/sections/ComunidadeSection";
+import { TutoresSection } from "@/components/sections/TutoresSection";
 import { SectionPlaceholder } from "@/components/ui/SectionPlaceholder";
 import { SECTIONS } from "@/data/sections";
 
@@ -16,7 +18,9 @@ const BUILT_SECTIONS = new Set([
   "tecnologias",
   "alem-do-codigo",
   "plataforma",
-  "alunos",
+  "projetos",
+  "comunidade",
+  "tutores",
 ]);
 
 const PENDING_SECTIONS = SECTIONS.filter((section) => !BUILT_SECTIONS.has(section.id));
@@ -30,7 +34,9 @@ export default function Home() {
       <TecnologiasSection />
       <AlemDoCodigoSection />
       <PlataformaSection />
-      <AlunosSection />
+      <ProjetosSection />
+      <ComunidadeSection />
+      <TutoresSection />
       {PENDING_SECTIONS.map((section) => (
         <SectionPlaceholder key={section.id} section={section} />
       ))}
