@@ -567,3 +567,23 @@ html.has-custom-cursor [role="button"] {
     transform: none;
   }
 }
+
+.aurora-blob--a1 {
+  width: 44vw;
+  height: 46vh;
+  left: -6%;
+  top: 10%;
+  opacity: 0.2;
+  background: var(--accent-2);
+  animation: formacoes-drift-b 21s var(--ease-standard) infinite alternate;
+}
+
+.aurora-blob--a2 {
+  width: 40vw;
+  height: 44vh;
+  left: 58%;
+  top: 44%;
+  opacity: 0.18;
+  background: var(--accent-1);
+  animation: formacoes-drift-a 17s var(--ease-standard) infinite alternate;
+}
