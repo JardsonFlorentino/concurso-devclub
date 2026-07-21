@@ -568,6 +568,28 @@ html.has-custom-cursor [role="button"] {
   }
 }
 
+@keyframes garantia-ring-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.garantia-ring {
+  animation: garantia-ring-spin 28s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme] .garantia-ring {
+    animation: none;
+  }
+
+  html[data-theme] .faq-panel,
+  html[data-theme] .faq-icon,
+  html[data-theme] .faq-icon-bar {
+    transition: none;
+  }
+}
+
 .projeto-media--accent-1 {
   background:
     radial-gradient(

@@ -10,45 +10,32 @@ import { TutoresSection } from "@/components/sections/TutoresSection";
 import { BonusSection } from "@/components/sections/BonusSection";
 import { MecSection } from "@/components/sections/MecSection";
 import { MercadoSection } from "@/components/sections/MercadoSection";
-import { SectionPlaceholder } from "@/components/ui/SectionPlaceholder";
-import { SECTIONS } from "@/data/sections";
-
-
-const BUILT_SECTIONS = new Set([
-  "hero",
-  "manifesto",
-  "formacoes",
-  "tecnologias",
-  "alem-do-codigo",
-  "plataforma",
-  "projetos",
-  "comunidade",
-  "tutores",
-  "bonus",
-  "mec",
-  "mercado",
-]);
-
-const PENDING_SECTIONS = SECTIONS.filter((section) => !BUILT_SECTIONS.has(section.id));
+import { GarantiaSection } from "@/components/sections/GarantiaSection";
+import { FaqSection } from "@/components/sections/FaqSection";
+import { CtaSection } from "@/components/sections/CtaSection";
+import { FooterSection } from "@/components/sections/FooterSection";
 
 export default function Home() {
   return (
-    <main>
-      <HeroSection />
-      <ManifestoSection />
-      <FormacoesSection />
-      <TecnologiasSection />
-      <AlemDoCodigoSection />
-      <PlataformaSection />
-      <ProjetosSection />
-      <ComunidadeSection />
-      <TutoresSection />
-      <BonusSection />
-      <MecSection />
-      <MercadoSection />
-      {PENDING_SECTIONS.map((section) => (
-        <SectionPlaceholder key={section.id} section={section} />
-      ))}
-    </main>
+    <>
+      <main>
+        <HeroSection />
+        <ManifestoSection />
+        <FormacoesSection />
+        <TecnologiasSection />
+        <AlemDoCodigoSection />
+        <PlataformaSection />
+        <ProjetosSection />
+        <ComunidadeSection />
+        <TutoresSection />
+        <BonusSection />
+        <MecSection />
+        <MercadoSection />
+        <GarantiaSection />
+        <FaqSection />
+        <CtaSection />
+      </main>
+      <FooterSection />
+    </>
   );
 }
