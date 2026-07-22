@@ -4,7 +4,7 @@ import { COMPANIES, COMPANIES_TITLE, type Company } from "@/data/companies";
 
 const BASE_LOGO_HEIGHT = 26;
 
-const ROW_HEIGHT = 48;
+const ROW_HEIGHT = 68;
 
 function CompanyLogo({ company }: { company: Company }) {
   if (!company.logo) {
