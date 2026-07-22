@@ -527,6 +527,20 @@ html.has-custom-cursor [role="button"] {
   }
 }
 
+.card-visual-tint {
+  background:
+    radial-gradient(
+      120% 92% at 50% 0%,
+      color-mix(in srgb, var(--glow, var(--accent-1)) 22%, transparent) 0%,
+      transparent 64%
+    ),
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--glow, var(--accent-1)) 6%, transparent) 0%,
+      transparent 100%
+    );
+}
+
 .card-glow {
   background: radial-gradient(
     circle at 50% 50%,

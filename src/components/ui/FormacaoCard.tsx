@@ -9,6 +9,7 @@ import {
   Bot,
   Braces,
   BrainCircuit,
+  Check,
   FileCode2,
   Hexagon,
   Layers,
@@ -100,36 +101,36 @@ export function FormacaoCard({ formacao, index }: FormacaoCardProps) {
       style={
         formacao.glow ? ({ "--glow": formacao.glow } as React.CSSProperties) : undefined
       }
-      className="group relative h-[380px] w-[300px] shrink-0 snap-start overflow-hidden rounded-[14px] border-[0.5px] border-accent-2/25 bg-white/[0.04] backdrop-blur-md transition-[border-color,box-shadow,background-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-accent-2/55 hover:bg-white/[0.06] hover:shadow-[0_22px_70px_-28px_var(--accent-2)] md:w-[340px]"
+      className="group relative h-[480px] w-[300px] shrink-0 snap-start overflow-hidden rounded-[14px] border-[0.5px] border-accent-2/25 bg-white/[0.04] backdrop-blur-md transition-[border-color,box-shadow,background-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-accent-2/55 hover:bg-white/[0.06] hover:shadow-[0_22px_70px_-28px_var(--accent-2)] md:w-[340px]"
     >
-      <span
-        aria-hidden="true"
-        className="pointer-events-none absolute -right-4 -top-9 select-none text-[9rem] font-bold leading-none tracking-[-0.06em] text-white-light opacity-[0.05]"
-      >
-        {label}
-      </span>
+      <div className="card-spotlight pointer-events-none absolute inset-0 z-20" />
 
-      <div className="card-spotlight pointer-events-none absolute inset-0" />
-
-      <div className="relative z-10 flex h-full flex-col p-7">
-        <div className="relative flex h-[150px] shrink-0 items-center justify-center">
+      <div className="relative z-10 flex h-full flex-col">
+        <div className="relative flex h-[184px] shrink-0 items-center justify-center overflow-hidden border-b-[0.5px] border-white/[0.06]">
+          <span className="card-visual-tint pointer-events-none absolute inset-0" />
           <span
             aria-hidden="true"
-            className="card-glow pointer-events-none absolute h-[180px] w-[180px] rounded-full"
+            className="pointer-events-none absolute left-5 top-4 select-none font-mono text-xs tracking-[-0.02em] text-white-light/30"
+          >
+            {label}
+          </span>
+          <span
+            aria-hidden="true"
+            className="card-glow pointer-events-none absolute h-[200px] w-[200px] rounded-full"
           />
           {formacao.logo ? (
             <Image
               src={formacao.logo}
               alt={formacao.name}
-              width={160}
-              height={160}
+              width={180}
+              height={180}
               unoptimized
-              className="card-media relative h-[72px] w-auto max-w-[150px] object-contain"
+              className="card-media relative h-[80px] w-auto max-w-[160px] object-contain"
             />
           ) : (
             <Icon
-              size={64}
-              strokeWidth={1.25}
+              size={80}
+              strokeWidth={1.2}
               aria-hidden="true"
               style={formacao.glow ? { color: formacao.glow } : undefined}
               className="card-media relative text-accent-1"
@@ -137,13 +138,45 @@ export function FormacaoCard({ formacao, index }: FormacaoCardProps) {
           )}
         </div>
 
-        <div className="mt-auto flex flex-col gap-2.5">
-          <h3 className="text-[1.375rem] font-semibold leading-tight tracking-[-0.02em] text-white-light">
-            {formacao.name}
-          </h3>
-          <p className="text-[0.9375rem] leading-relaxed text-gray-300">
-            {formacao.description}
-          </p>
+        <div className="flex flex-1 flex-col p-6">
+          <div className="flex flex-col gap-2">
+            <h3 className="text-[1.375rem] font-semibold leading-tight tracking-[-0.02em] text-white-light">
+              {formacao.name}
+            </h3>
+            <p className="text-[0.875rem] leading-relaxed text-gray-300">
+              {formacao.description}
+            </p>
+            <p className="flex items-start gap-2 text-[0.8125rem] leading-snug text-accent-1/90">
+              <Check
+                size={15}
+                strokeWidth={2.25}
+                aria-hidden="true"
+                className="mt-0.5 shrink-0"
+              />
+              {formacao.resultado}
+            </p>
+          </div>
+
+          <div className="mt-auto flex flex-col gap-3 pt-6">
+            <div className="flex items-center gap-2.5 text-xs text-gray-400">
+              <span>{formacao.nivel}</span>
+              <span
+                aria-hidden="true"
+                className="h-1 w-1 rounded-full bg-gray-500"
+              />
+              <span>{formacao.cargaHoraria}</span>
+            </div>
+            <ul className="flex flex-wrap gap-1.5">
+              {formacao.tags.map((tag) => (
+                <li
+                  key={tag}
+                  className="rounded-full border-[0.5px] border-white/10 bg-white/[0.04] px-2.5 py-1 text-[11px] font-medium text-gray-300"
+                >
+                  {tag}
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </article>
