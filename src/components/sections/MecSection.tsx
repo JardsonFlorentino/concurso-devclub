@@ -77,6 +77,7 @@ export function MecSection() {
         <div className="relative">
           <span
             aria-hidden="true"
+            data-parallax="40"
             className="plataforma-glow pointer-events-none absolute -inset-10 -z-10"
           />
 

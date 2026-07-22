@@ -82,7 +82,7 @@ export function BonusSection() {
       className="relative bg-background-deep py-[130px]"
     >
       <div className="relative z-10 mx-auto max-w-[1180px] px-6 md:px-10">
-        <header className="flex flex-col gap-4">
+        <header data-parallax="-24" className="flex flex-col gap-4">
           <h2 className="bonus-reveal max-w-[20ch] text-[clamp(2rem,4.2vw,3.75rem)] font-semibold leading-[1.12] tracking-[-0.03em] text-white-light">
             {BONUS_TITLE.before}
             <span className="text-accent-1">{BONUS_TITLE.highlight}</span>

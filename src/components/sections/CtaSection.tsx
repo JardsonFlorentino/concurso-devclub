@@ -47,7 +47,10 @@ export function CtaSection() {
         <div className="absolute inset-0 bg-black-dark/50" />
       </div>
 
-      <div className="relative z-10 mx-auto flex max-w-[1180px] flex-col items-center gap-9 px-6 text-center md:px-10">
+      <div
+        data-parallax="-20"
+        className="relative z-10 mx-auto flex max-w-[1180px] flex-col items-center gap-9 px-6 text-center md:px-10"
+      >
         <h2 className="cta-reveal text-[clamp(3rem,10vw,7.5rem)] font-semibold leading-[1.02] tracking-[-0.05em] text-white-light">
           {CTA_HEADLINE}
         </h2>

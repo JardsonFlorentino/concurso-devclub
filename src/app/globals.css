@@ -630,15 +630,58 @@ html.has-custom-cursor [role="button"] {
   filter: grayscale(0);
 }
 
+.tutor-portrait {
+  transition:
+    filter 0.6s var(--ease-standard),
+    transform 0.6s var(--ease-standard);
+}
+
+.tutor-portrait--accent-1 {
+  background:
+    radial-gradient(
+      130% 90% at 26% 14%,
+      color-mix(in srgb, #ffffff 18%, transparent) 0%,
+      transparent 56%
+    ),
+    linear-gradient(
+      var(--tutor-angle, 120deg),
+      color-mix(in srgb, var(--accent-1) 62%, #0b0c0e) 0%,
+      color-mix(in srgb, var(--accent-2) 38%, #0b0c0e) 100%
+    );
+}
+
+.tutor-portrait--accent-2 {
+  background:
+    radial-gradient(
+      130% 90% at 26% 14%,
+      color-mix(in srgb, #ffffff 18%, transparent) 0%,
+      transparent 56%
+    ),
+    linear-gradient(
+      var(--tutor-angle, 140deg),
+      color-mix(in srgb, var(--accent-2) 52%, #0b0c0e) 0%,
+      color-mix(in srgb, var(--accent-1) 48%, #0b0c0e) 100%
+    );
+}
+
+.group:hover .tutor-portrait {
+  filter: saturate(1.18) brightness(1.06);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html[data-theme] .projeto-media,
-  html[data-theme] .tutor-media {
+  html[data-theme] .tutor-media,
+  html[data-theme] .tutor-portrait {
     transition: none;
   }
 
   html[data-theme] .group:hover .projeto-media,
   html[data-theme] .group:hover .tutor-media {
     transform: none;
+  }
+
+  html[data-theme] .group:hover .tutor-portrait {
+    filter: none;
   }
 }
 

@@ -107,7 +107,7 @@ export function TutoresSection() {
       )}
 
       <div className="relative z-10 mx-auto max-w-[1180px] px-6 md:px-10">
-        <header className="flex flex-col gap-4">
+        <header data-parallax="-24" className="flex flex-col gap-4">
           <h2 className="tutores-reveal max-w-[20ch] text-[clamp(2rem,4.2vw,3.75rem)] font-semibold leading-[1.12] tracking-[-0.03em] text-white-light">
             {TUTORES_TITLE.before}
             <span className="text-accent-1">{TUTORES_TITLE.highlight}</span>
@@ -140,13 +140,20 @@ export function TutoresSection() {
                 ) : (
                   <span
                     aria-hidden="true"
-                    className={`tutor-media absolute inset-0 flex items-center justify-center text-[2.5rem] font-semibold tracking-[-0.03em] text-white-light/80 ${
+                    style={
+                      {
+                        "--tutor-angle": `${108 + index * 21}deg`,
+                      } as React.CSSProperties
+                    }
+                    className={`tutor-portrait absolute inset-0 flex items-center justify-center ${
                       tutor.tone === "accent-1"
-                        ? "projeto-media--accent-1"
-                        : "projeto-media--accent-2"
+                        ? "tutor-portrait--accent-1"
+                        : "tutor-portrait--accent-2"
                     }`}
                   >
-                    {initialsOf(tutor.name)}
+                    <span className="text-[2.75rem] font-semibold tracking-[-0.04em] text-white [text-shadow:0_2px_24px_rgba(0,0,0,0.28)] md:text-[3.25rem]">
+                      {initialsOf(tutor.name)}
+                    </span>
                   </span>
                 )}
               </div>

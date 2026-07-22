@@ -72,7 +72,7 @@ export function AlemDoCodigoSection() {
       </div>
 
       <div className="relative z-10 mx-auto max-w-[1180px] px-6 md:px-10">
-        <header className="flex flex-col gap-4">
+        <header data-parallax="-24" className="flex flex-col gap-4">
           <h2 className="alem-reveal max-w-[20ch] text-[clamp(2rem,4.2vw,3.75rem)] font-semibold leading-[1.12] tracking-[-0.03em] text-white-light">
             {ALEM_DO_CODIGO_TITLE.before}
             <span className="text-accent-1">

@@ -15,10 +15,12 @@ import { ReembolsoSection } from "@/components/sections/ReembolsoSection";
 import { FaqSection } from "@/components/sections/FaqSection";
 import { CtaSection } from "@/components/sections/CtaSection";
 import { FooterSection } from "@/components/sections/FooterSection";
+import { ScrollParallax } from "@/components/ScrollParallax";
 
 export default function Home() {
   return (
     <>
+      <ScrollParallax />
       <main>
         <HeroSection />
         <ManifestoSection />
