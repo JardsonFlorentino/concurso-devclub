@@ -58,9 +58,9 @@ export interface SocialLink {
 }
 
 export const FOOTER_SOCIAL: SocialLink[] = [
-  { label: "Instagram", href: "https://instagram.com", icon: "Instagram" },
-  { label: "YouTube", href: "https://youtube.com", icon: "Youtube" },
-  { label: "LinkedIn", href: "https://linkedin.com", icon: "Linkedin" },
+  { label: "Instagram", href: "https://www.instagram.com/devclubescola", icon: "Instagram" },
+  { label: "YouTube", href: "https://www.youtube.com/@canaldevclub", icon: "Youtube" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/school/dev-club-devs/", icon: "Linkedin" },
   { label: "GitHub", href: "https://github.com", icon: "Github" },
 ];
 

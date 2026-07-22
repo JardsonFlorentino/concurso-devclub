@@ -19,7 +19,6 @@ export const TECNOLOGIAS: Tecnologia[] = [
   { name: "TypeScript" },
   { name: "React" },
   { name: "Node.js" },
-  { name: "SQL" },
   { name: "PostgreSQL" },
   { name: "Docker" },
   { name: "Git" },
@@ -29,4 +28,14 @@ export const TECNOLOGIAS: Tecnologia[] = [
   { name: "OpenAI" },
   { name: "LangChain" },
   { name: "Pandas" },
+  { name: "Next.js" },
+  { name: "Tailwind CSS" },
+  { name: "Vite" },
+  { name: "Prisma" },
+  { name: "Drizzle ORM" },
+  { name: "Express" },
+  { name: "Fastify" },
+  { name: "Redis" }
+
+
 ];
