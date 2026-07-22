@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { FormacaoCard } from "@/components/ui/FormacaoCard";
@@ -16,6 +16,13 @@ gsap.registerPlugin(ScrollTrigger);
 
 const ALL_TAB = "all";
 const DRAG_SPEED = 1.35;
+const LANE_PERSPECTIVE = 1400;
+const LANE_ROTATION = 22;
+const LANE_SCALE_FOCUS = 1.04;
+const LANE_SCALE_EDGE = 0.92;
+const LANE_DEPTH = 180;
+const LANE_OPACITY_EDGE = 0.75;
+const FOCUS_THRESHOLD = 0.24;
 
 export function FormacoesSection() {
   const pinRef = useRef<HTMLDivElement | null>(null);
@@ -28,6 +35,8 @@ export function FormacoesSection() {
   const indicatorRef = useRef<HTMLSpanElement | null>(null);
   const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
   const hasEnteredRef = useRef(false);
+  const lanesRef = useRef<{ element: HTMLElement; center: number }[]>([]);
+  const curvedRef = useRef(false);
 
   const [activeTab, setActiveTab] = useState<string>(ALL_TAB);
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -63,6 +72,79 @@ export function FormacoesSection() {
         : FORMACAO_CATEGORIES.filter((category) => category.number === activeTab),
     [activeTab],
   );
+
+  const measureLanes = useCallback(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    lanesRef.current = Array.from(
+      track.querySelectorAll<HTMLElement>("[data-lane]"),
+    ).map((element) => ({
+      element,
+      center: element.offsetLeft + element.offsetWidth / 2,
+    }));
+  }, []);
+
+  const updateLanes = useCallback(() => {
+    const track = trackRef.current;
+    const viewport = viewportRef.current;
+    const lanes = lanesRef.current;
+    if (!track || !viewport || !curvedRef.current || !lanes.length) return;
+
+    const bounds = viewport.getBoundingClientRect();
+    const origin = track.getBoundingClientRect().left;
+    const middle = bounds.left + bounds.width / 2;
+    const reach = bounds.width / 2;
+
+    let focusIndex = 0;
+    let focusDistance = Infinity;
+
+    const offsets = lanes.map((lane, index) => {
+      const offset = gsap.utils.clamp(
+        -1,
+        1,
+        (origin + lane.center - middle) / reach,
+      );
+      const distance = Math.abs(offset);
+      if (distance < focusDistance) {
+        focusDistance = distance;
+        focusIndex = index;
+      }
+      return { offset, distance };
+    });
+
+    lanes.forEach((lane, index) => {
+      const { offset, distance } = offsets[index];
+      const scale =
+        LANE_SCALE_FOCUS - (LANE_SCALE_FOCUS - LANE_SCALE_EDGE) * distance;
+
+      lane.element.style.transform = `perspective(${LANE_PERSPECTIVE}px) translateZ(${
+        -LANE_DEPTH * distance
+      }px) rotateY(${-offset * LANE_ROTATION}deg) scale(${scale})`;
+      lane.element.style.opacity = `${
+        1 - (1 - LANE_OPACITY_EDGE) * distance
+      }`;
+      lane.element.style.zIndex = `${Math.round((1 - distance) * 100)}`;
+
+      if (index === focusIndex && focusDistance < FOCUS_THRESHOLD) {
+        lane.element.setAttribute("data-focus", "");
+      } else {
+        lane.element.removeAttribute("data-focus");
+      }
+    });
+  }, []);
+
+  const resetLanes = useCallback(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    track.querySelectorAll<HTMLElement>("[data-lane]").forEach((element) => {
+      element.style.transform = "";
+      element.style.opacity = "";
+      element.style.zIndex = "";
+      element.removeAttribute("data-focus");
+    });
+  }, []);
 
   useEffect(() => {
     const title = titleRef.current;
@@ -125,10 +207,12 @@ export function FormacoesSection() {
       "(min-width: 1024px) and (prefers-reduced-motion: no-preference)",
       () => {
         const getDistance = () => Math.max(track.scrollWidth - window.innerWidth, 0);
+        curvedRef.current = true;
 
         const tween = gsap.to(track, {
           x: () => -getDistance(),
           ease: "none",
+          onUpdate: updateLanes,
           scrollTrigger: {
             trigger: pin,
             start: "top top",
@@ -139,12 +223,18 @@ export function FormacoesSection() {
             onRefresh: (self) => {
               scrollTriggerRef.current = self;
               progressBar.style.opacity = getDistance() > 0 ? "1" : "0";
+              measureLanes();
+              updateLanes();
             },
             onUpdate: (self) => {
               progress.style.transform = `scaleX(${self.progress})`;
+              updateLanes();
             },
           },
         });
+
+        measureLanes();
+        updateLanes();
 
         let dragging = false;
         let dragStartX = 0;
@@ -173,6 +263,8 @@ export function FormacoesSection() {
 
         return () => {
           scrollTriggerRef.current = null;
+          curvedRef.current = false;
+          resetLanes();
           tween.scrollTrigger?.kill();
           tween.kill();
           viewport.removeEventListener("pointerdown", onPointerDown);
@@ -184,6 +276,9 @@ export function FormacoesSection() {
     );
 
     media.add("(max-width: 1023px), (prefers-reduced-motion: reduce)", () => {
+      curvedRef.current = false;
+      resetLanes();
+
       const onScroll = () => {
         const distance = viewport.scrollWidth - viewport.clientWidth;
         progressBar.style.opacity = distance > 0 ? "1" : "0";
@@ -197,7 +292,7 @@ export function FormacoesSection() {
     });
 
     return () => media.revert();
-  }, [prefersReducedMotion]);
+  }, [prefersReducedMotion, measureLanes, updateLanes, resetLanes]);
 
   useEffect(() => {
     const track = trackRef.current;
@@ -205,6 +300,8 @@ export function FormacoesSection() {
     if (!track || !pin) return;
 
     const cards = track.querySelectorAll<HTMLElement>("[data-card]");
+    measureLanes();
+    updateLanes();
 
     if (prefersReducedMotion) {
       gsap.set(cards, { opacity: 1, y: 0, scale: 1 });
@@ -249,7 +346,7 @@ export function FormacoesSection() {
     ScrollTrigger.refresh();
     const start = scrollTriggerRef.current?.start;
     if (typeof start === "number") scrollToPosition(start);
-  }, [activeTab, prefersReducedMotion]);
+  }, [activeTab, prefersReducedMotion, measureLanes, updateLanes]);
 
   const handleTabChange = (next: string) => {
     if (next === activeTab) return;
@@ -336,9 +433,12 @@ export function FormacoesSection() {
             ref={viewportRef}
             className="flex snap-x snap-mandatory items-center overflow-x-auto scroll-pl-6 pb-16 pt-12 md:scroll-pl-10 lg:snap-none lg:overflow-hidden lg:py-14 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
-            <div ref={trackRef} className="flex items-center gap-6 px-6 md:px-10">
+            <div
+              ref={trackRef}
+              className="relative flex items-center gap-6 px-6 md:px-10"
+            >
               {visibleCategories.map((category) => (
-                <div key={category.number} className="flex items-center gap-6">
+                <Fragment key={category.number}>
                   <div
                     data-card
                     className="flex w-[220px] shrink-0 snap-start flex-col gap-3 md:w-[260px]"
@@ -355,13 +455,14 @@ export function FormacoesSection() {
                   </div>
 
                   {category.items.map((formacao) => (
-                    <FormacaoCard
-                      key={formacao.name}
-                      formacao={formacao}
-                      index={cardIndexByName.get(formacao.name) ?? 0}
-                    />
+                    <div key={formacao.name} data-lane className="formacao-lane">
+                      <FormacaoCard
+                        formacao={formacao}
+                        index={cardIndexByName.get(formacao.name) ?? 0}
+                      />
+                    </div>
                   ))}
-                </div>
+                </Fragment>
               ))}
             </div>
           </div>

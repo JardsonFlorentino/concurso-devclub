@@ -472,6 +472,60 @@ html.has-custom-cursor [role="button"] {
   }
 }
 
+.formacao-lane {
+  flex-shrink: 0;
+  will-change: transform, opacity;
+  transition: none;
+}
+
+.formacao-card {
+  padding: 1px;
+  border-radius: 15px;
+  background: linear-gradient(
+    var(--card-angle, 140deg),
+    color-mix(in srgb, var(--accent-1) 24%, transparent) 0%,
+    color-mix(in srgb, var(--accent-2) 24%, transparent) 100%
+  );
+  transition:
+    background 0.5s var(--ease-standard),
+    box-shadow 0.5s var(--ease-standard);
+}
+
+.formacao-card-inner {
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--black-dark) 88%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.formacao-lane[data-focus] .formacao-card {
+  background: linear-gradient(
+    var(--card-angle, 140deg),
+    var(--accent-1) 0%,
+    var(--accent-2) 100%
+  );
+  box-shadow: 0 34px 90px -34px var(--accent-2);
+}
+
+.formacao-card:hover {
+  background: linear-gradient(
+    var(--card-angle, 140deg),
+    color-mix(in srgb, var(--accent-1) 72%, transparent) 0%,
+    color-mix(in srgb, var(--accent-2) 72%, transparent) 100%
+  );
+  box-shadow: 0 22px 70px -28px var(--accent-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme] .formacao-lane {
+    transform: none !important;
+    opacity: 1 !important;
+  }
+
+  html[data-theme] .formacao-card {
+    transition: none;
+  }
+}
+
 .formacoes-glow {
   background: radial-gradient(
     ellipse 62% 48% at 50% 52%,
@@ -892,7 +946,7 @@ html.has-custom-cursor [role="button"] {
   opacity: 1;
 }
 
-.tech-tile-invert {
+.logo-invert {
   filter: brightness(0) invert(1);
   opacity: 0.92;
 }

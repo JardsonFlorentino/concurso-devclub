@@ -35,6 +35,7 @@ export interface Formacao {
   tags: string[];
   resultado: string;
   logo?: string;
+  invert?: boolean;
   glow?: string;
 }
 
@@ -89,6 +90,8 @@ export const FORMACAO_CATEGORIES: FormacaoCategory[] = [
         name: "React",
         description: "A biblioteca mais pedida nas vagas.",
         icon: "Atom",
+        logo: "/tech/react.svg",
+        invert: true,
         glow: "#61dafb",
         nivel: "Intermediário",
         cargaHoraria: "90h",
@@ -99,6 +102,7 @@ export const FORMACAO_CATEGORIES: FormacaoCategory[] = [
         name: "Node",
         description: "JavaScript rodando no servidor.",
         icon: "Hexagon",
+        logo: "/tech/nodejs.svg",
         glow: "#3c873a",
         nivel: "Intermediário",
         cargaHoraria: "80h",
@@ -109,6 +113,7 @@ export const FORMACAO_CATEGORIES: FormacaoCategory[] = [
         name: "JavaScript",
         description: "A linguagem que move a web.",
         icon: "Braces",
+        logo: "/tech/javascript.svg",
         glow: "#f7df1e",
         nivel: "Iniciante",
         cargaHoraria: "70h",
@@ -119,6 +124,7 @@ export const FORMACAO_CATEGORIES: FormacaoCategory[] = [
         name: "HTML5",
         description: "A estrutura por trás de tudo.",
         icon: "FileCode2",
+        logo: "/tech/html5.svg",
         glow: "#e34f26",
         nivel: "Iniciante",
         cargaHoraria: "40h",
@@ -129,6 +135,7 @@ export const FORMACAO_CATEGORIES: FormacaoCategory[] = [
         name: "CSS3",
         description: "Layout, estilo e responsividade.",
         icon: "Palette",
+        logo: "/tech/css3.svg",
         glow: "#264de4",
         nivel: "Iniciante",
         cargaHoraria: "50h",
@@ -172,6 +179,8 @@ export const FORMACAO_CATEGORIES: FormacaoCategory[] = [
         name: "Trilha N8N",
         description: "Automação visual sem limite.",
         icon: "Workflow",
+        logo: "/tech/n8n.svg",
+        invert: true,
         glow: "#ea4b71",
         nivel: "Iniciante",
         cargaHoraria: "55h",

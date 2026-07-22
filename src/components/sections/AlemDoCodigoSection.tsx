@@ -93,17 +93,19 @@ export function AlemDoCodigoSection() {
             return (
               <li
                 key={item.title}
-                className={`alem-reveal group flex flex-col gap-5 rounded-[14px] border-[0.5px] border-accent-2/25 bg-white/[0.03] p-7 backdrop-blur-sm transition-[border-color,background-color,transform] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-accent-2/50 hover:bg-white/[0.05] ${
-                  featured ? "md:col-span-2" : ""
+                className={`alem-reveal group flex gap-5 rounded-[14px] border-[0.5px] border-accent-2/25 bg-white/[0.03] p-7 backdrop-blur-sm transition-[border-color,background-color,transform] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-accent-2/50 hover:bg-white/[0.05] ${
+                  featured
+                    ? "flex-col md:col-span-2 md:flex-row md:items-center md:gap-7"
+                    : "flex-col"
                 }`}
               >
                 <span
-                  className={`flex items-center justify-center rounded-[14px] border-[0.5px] border-accent-1/25 bg-accent-1/[0.08] text-accent-1 transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:border-accent-1/50 ${
-                    featured ? "h-12 w-12" : "h-11 w-11"
+                  className={`flex shrink-0 items-center justify-center rounded-[14px] border-[0.5px] border-accent-1/25 bg-accent-1/[0.08] text-accent-1 transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:border-accent-1/50 ${
+                    featured ? "h-14 w-14 md:h-16 md:w-16" : "h-11 w-11"
                   }`}
                 >
                   <Icon
-                    size={featured ? 24 : 20}
+                    size={featured ? 28 : 20}
                     strokeWidth={1.5}
                     aria-hidden="true"
                   />
@@ -119,7 +121,7 @@ export function AlemDoCodigoSection() {
                   </h3>
                   <p
                     className={`leading-relaxed text-gray-300 ${
-                      featured ? "max-w-[46ch] text-base" : "text-[0.9375rem]"
+                      featured ? "text-base" : "text-[0.9375rem]"
                     }`}
                   >
                     {item.description}

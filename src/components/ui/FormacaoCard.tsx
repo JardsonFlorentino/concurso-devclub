@@ -44,6 +44,7 @@ const ICONS: Record<FormacaoIcon, LucideIcon> = {
 };
 
 const MAX_TILT_DEG = 3;
+const FOCUS_TILT_DEG = 1.2;
 
 interface FormacaoCardProps {
   formacao: Formacao;
@@ -69,10 +70,13 @@ export function FormacaoCard({ formacao, index }: FormacaoCardProps) {
 
     const relativeX = (offsetX - bounds.width / 2) / (bounds.width / 2);
     const relativeY = (offsetY - bounds.height / 2) / (bounds.height / 2);
+    const tilt = card.closest("[data-lane][data-focus]")
+      ? FOCUS_TILT_DEG
+      : MAX_TILT_DEG;
 
     gsap.to(card, {
-      rotateY: gsap.utils.clamp(-1, 1, relativeX) * MAX_TILT_DEG,
-      rotateX: gsap.utils.clamp(-1, 1, relativeY) * -MAX_TILT_DEG,
+      rotateY: gsap.utils.clamp(-1, 1, relativeX) * tilt,
+      rotateX: gsap.utils.clamp(-1, 1, relativeY) * -tilt,
       y: -8,
       duration: 0.5,
       ease: "power3.out",
@@ -99,13 +103,17 @@ export function FormacaoCard({ formacao, index }: FormacaoCardProps) {
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
       style={
-        formacao.glow ? ({ "--glow": formacao.glow } as React.CSSProperties) : undefined
+        {
+          "--card-angle": `${112 + index * 19}deg`,
+          ...(formacao.glow ? { "--glow": formacao.glow } : {}),
+        } as React.CSSProperties
       }
-      className="group relative h-[480px] w-[300px] shrink-0 snap-start overflow-hidden rounded-[14px] border-[0.5px] border-accent-2/25 bg-white/[0.04] backdrop-blur-md transition-[border-color,box-shadow,background-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-accent-2/55 hover:bg-white/[0.06] hover:shadow-[0_22px_70px_-28px_var(--accent-2)] md:w-[340px]"
+      className="formacao-card group relative h-[480px] w-[300px] shrink-0 snap-start md:w-[340px]"
     >
-      <div className="card-spotlight pointer-events-none absolute inset-0 z-20" />
+      <div className="formacao-card-inner relative flex h-full flex-col overflow-hidden">
+        <div className="card-spotlight pointer-events-none absolute inset-0 z-20" />
 
-      <div className="relative z-10 flex h-full flex-col">
+        <div className="relative z-10 flex h-full flex-col">
         <div className="relative flex h-[184px] shrink-0 items-center justify-center overflow-hidden border-b-[0.5px] border-white/[0.06]">
           <span className="card-visual-tint pointer-events-none absolute inset-0" />
           <span
@@ -125,7 +133,9 @@ export function FormacaoCard({ formacao, index }: FormacaoCardProps) {
               width={180}
               height={180}
               unoptimized
-              className="card-media relative h-[80px] w-auto max-w-[160px] object-contain"
+              className={`card-media relative h-[80px] w-auto max-w-[160px] object-contain ${
+                formacao.invert ? "logo-invert" : ""
+              }`}
             />
           ) : (
             <Icon
@@ -177,6 +187,7 @@ export function FormacaoCard({ formacao, index }: FormacaoCardProps) {
               ))}
             </ul>
           </div>
+        </div>
         </div>
       </div>
     </article>

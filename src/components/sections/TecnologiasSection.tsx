@@ -26,7 +26,7 @@ function TechCell({ tech }: { tech: Tecnologia }) {
           height={28}
           unoptimized
           className={`h-7 w-7 object-contain ${
-            tech.invert ? "tech-tile-invert" : ""
+            tech.invert ? "logo-invert" : ""
           }`}
         />
       ) : null}

@@ -17,6 +17,6 @@ export const COMPANIES: Company[] = [
   { name: "NVIDIA", logo: "/logos/nvidia-logo-2.svg", scale: 0.7 },
   { name: "Shopify", logo: "/logos/shopify-logo.svg", scale: 1.5 },
   { name: "TOTVS", logo: "/logos/totvs-logo.svg", scale: 1.5 },
-  { name: "Uber", logo: "/logos/uber-logo-novo.svg", scale: 1.6 },
+  { name: "Uber", logo: "/logos/uber-logo.svg", scale: 0.9 },
   { name: "Meta", logo: "/logos/meta-logo.svg", scale: 1.5 },
 ];

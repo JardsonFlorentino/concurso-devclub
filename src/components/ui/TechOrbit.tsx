@@ -32,22 +32,28 @@ import { useInView } from "@/hooks/useInView";
 import type { Tecnologia } from "@/data/tecnologias";
 
 const TAU = Math.PI * 2;
-const TILT = 0.5;
+const TILT = 0.64;
 const ROLL = -0.09;
-const SCALE_MIN = 0.68;
-const SCALE_RANGE = 0.52;
+const SCALE_MIN = 0.66;
+const SCALE_RANGE = 0.44;
 const SCALE_MAX = SCALE_MIN + SCALE_RANGE;
-const OPACITY_MIN = 0.6;
-const OPACITY_RANGE = 0.4;
+const OPACITY_MIN = 0.62;
+const OPACITY_RANGE = 0.38;
 const EXTENT_X = Math.cos(ROLL) + TILT * Math.abs(Math.sin(ROLL));
 const EXTENT_Y = Math.abs(Math.sin(ROLL)) + TILT * Math.cos(ROLL);
 const PAD = 6;
-const SPACING_FACTOR = 1.42;
-const MIN_ITEMS = 5;
+const MIN_GAP = 20;
+const TILE_PCT = 0.072;
+const TILE_MIN = 36;
+const TILE_MAX = 86;
+const INNER_TILE_RATIO = 0.5;
+const HEIGHT_MAX = 680;
+const NAME_TILE_MIN = 64;
 const COMPACT_WIDTH = 640;
-const REVOLUTION_DESKTOP = 54;
-const REVOLUTION_COMPACT = 128;
-const HOVER_RATE = 0.12;
+const REVOLUTION_OUTER = 64;
+const REVOLUTION_INNER = 52;
+const COMPACT_FACTOR = 0.42;
+const HOVER_RATE = 0.1;
 const HOVER_Z = 400;
 const ARC_STEPS = 512;
 
@@ -111,35 +117,49 @@ const ICONS: Record<string, LucideIcon> = {
 };
 
 interface Geometry {
-  tile: number;
-  radius: number;
+  tileOuter: number;
+  tileInner: number;
+  radiusOuter: number;
+  radiusInner: number;
+  capacityOuter: number;
+  capacityInner: number;
   height: number;
-  capacity: number;
   compact: boolean;
 }
 
 const clamp = (value: number, min: number, max: number) =>
   Math.min(max, Math.max(min, value));
 
+const capacityFor = (radius: number, tile: number) =>
+  Math.max(
+    0,
+    Math.floor((ARC_LENGTH * radius) / (Math.SQRT2 * tile * SCALE_MAX + MIN_GAP)),
+  );
+
 function geometryFor(width: number): Geometry {
-  const compact = width < COMPACT_WIDTH;
-  const tile = Math.round(clamp(width * 0.105, 50, 104));
-  const budget = (tile * SCALE_MAX) / 2 + PAD;
-  const maxHeight = clamp(width * 0.62, 300, 620);
-  const radius = Math.max(
+  const tileOuter = Math.round(clamp(width * TILE_PCT, TILE_MIN, TILE_MAX));
+  const tileInner = Math.round(tileOuter * INNER_TILE_RATIO);
+  const budget = (tileOuter * SCALE_MAX) / 2 + PAD;
+  const maxHeight = clamp(width * 0.62, 300, HEIGHT_MAX);
+  const radiusOuter = Math.max(
     0,
     Math.min((width / 2 - budget) / EXTENT_X, (maxHeight / 2 - budget) / EXTENT_Y),
   );
+  const radiusInner = Math.max(
+    0,
+    radiusOuter -
+      ((Math.SQRT1_2 * (tileOuter + tileInner) * SCALE_MAX + MIN_GAP) / TILT),
+  );
 
   return {
-    tile,
-    radius,
-    compact,
-    capacity: Math.max(
-      MIN_ITEMS,
-      Math.floor((ARC_LENGTH * radius) / (tile * SCALE_MAX * SPACING_FACTOR)),
-    ),
-    height: Math.round(2 * (radius * EXTENT_Y + budget)),
+    tileOuter,
+    tileInner,
+    radiusOuter,
+    radiusInner,
+    capacityOuter: capacityFor(radiusOuter, tileOuter),
+    capacityInner: capacityFor(radiusInner, tileInner),
+    height: Math.round(2 * (radiusOuter * EXTENT_Y + budget)),
+    compact: width < COMPACT_WIDTH,
   };
 }
 
@@ -172,24 +192,26 @@ function TechTile({
             unoptimized
             style={{ transform: `scale(${tech.scale ?? 1})` }}
             className={`h-full w-full object-contain ${
-              tech.invert ? "tech-tile-invert" : ""
+              tech.invert ? "logo-invert" : ""
             }`}
           />
         </span>
       ) : (
         <span
           style={{ fontSize: size * 0.135 }}
-          className="tech-tile-inner flex flex-col items-center justify-center gap-[0.5em] px-[0.4em]"
+          className="tech-tile-inner flex flex-col items-center justify-center gap-[0.4em] px-[0.3em]"
         >
           <Icon
-            size="1.55em"
+            size={size >= NAME_TILE_MIN ? "1.55em" : "2.4em"}
             strokeWidth={1.4}
             aria-hidden="true"
             className="text-accent-1/85"
           />
-          <span className="max-w-full truncate text-[0.82em] font-medium leading-none tracking-[-0.01em] text-gray-300">
-            {tech.name}
-          </span>
+          {size >= NAME_TILE_MIN ? (
+            <span className="max-w-full truncate text-[0.82em] font-medium leading-none tracking-[-0.01em] text-gray-300">
+              {tech.name}
+            </span>
+          ) : null}
         </span>
       )}
     </span>
@@ -198,12 +220,13 @@ function TechTile({
 
 export function TechOrbit({ tecnologias }: { tecnologias: Tecnologia[] }) {
   const rootRef = useRef<HTMLDivElement | null>(null);
-  const itemsRef = useRef<(HTMLElement | null)[]>([]);
-  const phaseRef = useRef(0);
-  const hoverRef = useRef<number | null>(null);
+  const outerRefs = useRef<(HTMLElement | null)[]>([]);
+  const innerRefs = useRef<(HTMLElement | null)[]>([]);
+  const phaseRef = useRef({ outer: 0, inner: 0 });
+  const hoverRef = useRef<string | null>(null);
   const rateRef = useRef(1);
   const [width, setWidth] = useState(0);
-  const [hovered, setHovered] = useState<number | null>(null);
+  const [hovered, setHovered] = useState<string | null>(null);
   const inView = useInView(rootRef, { rootMargin: "120px" });
 
   useEffect(() => {
@@ -219,74 +242,112 @@ export function TechOrbit({ tecnologias }: { tecnologias: Tecnologia[] }) {
   }, []);
 
   const geometry = useMemo(() => geometryFor(width), [width]);
-  const items = useMemo(
-    () => tecnologias.slice(0, geometry.capacity),
-    [tecnologias, geometry.capacity],
+
+  const outerItems = useMemo(
+    () =>
+      tecnologias
+        .filter((tech) => tech.ring === "outer")
+        .slice(0, geometry.capacityOuter),
+    [tecnologias, geometry.capacityOuter],
+  );
+
+  const innerItems = useMemo(
+    () =>
+      tecnologias
+        .filter((tech) => tech.ring === "inner")
+        .slice(0, geometry.capacityInner),
+    [tecnologias, geometry.capacityInner],
   );
 
   const paint = useCallback(
-    (phase: number) => {
-      const { radius } = geometry;
-      const total = items.length;
-      if (!total) return;
+    (outerPhase: number, innerPhase: number) => {
+      const rings = [
+        {
+          key: "outer",
+          nodes: outerRefs.current,
+          total: outerItems.length,
+          radius: geometry.radiusOuter,
+          phase: outerPhase,
+        },
+        {
+          key: "inner",
+          nodes: innerRefs.current,
+          total: innerItems.length,
+          radius: geometry.radiusInner,
+          phase: innerPhase,
+        },
+      ];
 
-      for (let index = 0; index < total; index++) {
-        const element = itemsRef.current[index];
-        if (!element) continue;
+      for (const ring of rings) {
+        for (let index = 0; index < ring.total; index++) {
+          const element = ring.nodes[index];
+          if (!element) continue;
 
-        const angle = angleAt(index / total + phase);
-        const x = radius * Math.cos(angle);
-        const y = radius * TILT * Math.sin(angle);
-        const depth = (Math.sin(angle) + 1) / 2;
-        const scale = SCALE_MIN + SCALE_RANGE * depth;
-        const isHovered = hoverRef.current === index;
+          const angle = angleAt(index / ring.total + ring.phase);
+          const x = ring.radius * Math.cos(angle);
+          const y = ring.radius * TILT * Math.sin(angle);
+          const depth = (Math.sin(angle) + 1) / 2;
+          const scale = SCALE_MIN + SCALE_RANGE * depth;
+          const isHovered = hoverRef.current === `${ring.key}:${index}`;
 
-        element.style.transform = `translate(-50%, -50%) translate(${
-          x * Math.cos(ROLL) - y * Math.sin(ROLL)
-        }px, ${x * Math.sin(ROLL) + y * Math.cos(ROLL)}px) scale(${scale})`;
-        element.style.opacity = isHovered
-          ? "1"
-          : `${OPACITY_MIN + OPACITY_RANGE * depth}`;
-        element.style.zIndex = `${isHovered ? HOVER_Z : Math.round(depth * 100)}`;
+          element.style.transform = `translate(-50%, -50%) translate(${
+            x * Math.cos(ROLL) - y * Math.sin(ROLL)
+          }px, ${x * Math.sin(ROLL) + y * Math.cos(ROLL)}px) scale(${scale})`;
+          element.style.opacity = isHovered
+            ? "1"
+            : `${OPACITY_MIN + OPACITY_RANGE * depth}`;
+          element.style.zIndex = `${
+            isHovered ? HOVER_Z : Math.round(depth * 100)
+          }`;
+        }
       }
     },
-    [geometry, items.length],
+    [geometry, outerItems.length, innerItems.length],
   );
 
   const onHover = useCallback(
-    (index: number | null) => {
-      hoverRef.current = index;
-      setHovered(index);
-      paint(phaseRef.current);
+    (key: string | null) => {
+      hoverRef.current = key;
+      setHovered(key);
+      paint(phaseRef.current.outer, phaseRef.current.inner);
     },
     [paint],
   );
 
   useEffect(() => {
-    if (!geometry.radius) return;
+    if (!geometry.radiusOuter) return;
 
-    paint(phaseRef.current);
+    paint(phaseRef.current.outer, phaseRef.current.inner);
     if (!inView) return;
 
-    const speed =
-      1 / (geometry.compact ? REVOLUTION_COMPACT : REVOLUTION_DESKTOP);
+    const factor = geometry.compact ? COMPACT_FACTOR : 1;
+    const outerSpeed = factor / REVOLUTION_OUTER;
+    const innerSpeed = factor / REVOLUTION_INNER;
     let previous = performance.now();
     let frame = 0;
 
     const loop = (now: number) => {
       const delta = Math.min(now - previous, 64) / 1000;
       previous = now;
+
       const target = hoverRef.current === null ? 1 : HOVER_RATE;
       rateRef.current += (target - rateRef.current) * Math.min(delta * 7, 1);
-      phaseRef.current =
-        (phaseRef.current + delta * speed * rateRef.current) % 1;
-      paint(phaseRef.current);
+
+      const phase = phaseRef.current;
+      phase.outer = (phase.outer + delta * outerSpeed * rateRef.current) % 1;
+      phase.inner = (phase.inner - delta * innerSpeed * rateRef.current + 1) % 1;
+      paint(phase.outer, phase.inner);
       frame = requestAnimationFrame(loop);
     };
 
     frame = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(frame);
-  }, [inView, paint, geometry.radius, geometry.compact]);
+  }, [inView, paint, geometry.radiusOuter, geometry.compact]);
+
+  const rings = [
+    { key: "outer", items: outerItems, tile: geometry.tileOuter, refs: outerRefs },
+    { key: "inner", items: innerItems, tile: geometry.tileInner, refs: innerRefs },
+  ];
 
   return (
     <div className="relative -mx-6 mt-14 md:mx-0 md:mt-16">
@@ -300,33 +361,37 @@ export function TechOrbit({ tecnologias }: { tecnologias: Tecnologia[] }) {
 
         <div
           className="absolute inset-0 transition-opacity duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
-          style={{ opacity: geometry.radius ? 1 : 0 }}
+          style={{ opacity: geometry.radiusOuter ? 1 : 0 }}
         >
-          {items.map((tech, index) => (
-            <span
-              key={tech.name}
-              ref={(node) => {
-                itemsRef.current[index] = node;
-              }}
-              onPointerEnter={(event) => {
-                if (event.pointerType === "mouse") onHover(index);
-              }}
-              onPointerLeave={() => onHover(null)}
-              className="absolute left-1/2 top-1/2 block"
-              style={{
-                width: geometry.tile,
-                height: geometry.tile,
-                willChange: "transform, opacity",
-              }}
-            >
-              <TechTile
-                tech={tech}
-                size={geometry.tile}
-                index={index}
-                active={hovered === index}
-              />
-            </span>
-          ))}
+          {rings.map((ring) =>
+            ring.items.map((tech, index) => (
+              <span
+                key={tech.name}
+                ref={(node) => {
+                  ring.refs.current[index] = node;
+                }}
+                onPointerEnter={(event) => {
+                  if (event.pointerType === "mouse") {
+                    onHover(`${ring.key}:${index}`);
+                  }
+                }}
+                onPointerLeave={() => onHover(null)}
+                className="absolute left-1/2 top-1/2 block"
+                style={{
+                  width: ring.tile,
+                  height: ring.tile,
+                  willChange: "transform, opacity",
+                }}
+              >
+                <TechTile
+                  tech={tech}
+                  size={ring.tile}
+                  index={index}
+                  active={hovered === `${ring.key}:${index}`}
+                />
+              </span>
+            )),
+          )}
         </div>
       </div>
 
