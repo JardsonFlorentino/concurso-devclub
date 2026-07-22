@@ -5,7 +5,9 @@ export const COMUNIDADE_TITLE = {
 };
 
 export const COMUNIDADE_SUBTITLE =
-  "Alguns dos nomes que fizeram a travessia do zero à contratação.";
+  "São milhares de histórias como essas acontecendo todo mês. Reunimos algumas para você conhecer de perto.";
+
+export const COMUNIDADE_HIGHLIGHT_LABEL = "Histórias em foco";
 
 export interface Aluno {
   name: string;

@@ -42,7 +42,7 @@
 }
 
 
-html[data-theme] * {
+:where(html[data-theme]) * {
   transition:
     color 1s var(--ease-standard),
     background-color 1s var(--ease-standard),

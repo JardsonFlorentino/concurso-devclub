@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import {
   ALUNOS,
+  COMUNIDADE_HIGHLIGHT_LABEL,
   COMUNIDADE_SUBTITLE,
   COMUNIDADE_TITLE,
   DEPOIMENTOS,
@@ -68,9 +69,14 @@ export function ComunidadeSection() {
           </p>
         </header>
 
+        <p className="alunos-reveal mt-14 flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.2em] text-accent-1">
+          <span aria-hidden="true" className="h-px w-8 bg-accent-1/40" />
+          {COMUNIDADE_HIGHLIGHT_LABEL}
+        </p>
+
         <ul
           onPointerLeave={() => setActiveIndex(null)}
-          className="mt-12 flex max-w-[720px] flex-col border-t border-white/10"
+          className="mt-6 flex max-w-[720px] flex-col border-t border-white/10"
         >
           {ALUNOS.map((aluno, index) => {
             const isActive = activeIndex === index;
