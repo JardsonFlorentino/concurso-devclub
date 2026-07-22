@@ -76,7 +76,16 @@ export function FooterSection() {
         </div>
 
         <p className="mt-16 border-t border-white/10 pt-8 text-sm text-gray-500">
-          {FOOTER_SIGNATURE}
+          {FOOTER_SIGNATURE.before}
+          <a
+            href={FOOTER_SIGNATURE.authorUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-300 transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:text-accent-1"
+          >
+            {FOOTER_SIGNATURE.authorName}
+          </a>
+          {FOOTER_SIGNATURE.after}
         </p>
       </div>
     </footer>

@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { BonusCard } from "@/components/ui/BonusCard";
 import { AULAS_BONUS, BONUS_SUBTITLE, BONUS_TITLE } from "@/data/bonus";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -98,43 +98,12 @@ export function BonusSection() {
         ref={viewportRef}
         className="mt-14 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-pl-6 px-6 pb-4 md:scroll-pl-10 md:px-10 lg:scroll-pl-[max(2.5rem,calc((100vw-1180px)/2+2.5rem))] lg:px-[max(2.5rem,calc((100vw-1180px)/2+2.5rem))] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {AULAS_BONUS.map((aula) => (
-          <article
+        {AULAS_BONUS.map((aula, index) => (
+          <BonusCard
             key={`${aula.specialist}-${aula.topic}`}
-            className="bonus-reveal group flex w-[280px] shrink-0 snap-start flex-col overflow-hidden rounded-[14px] border-[0.5px] border-accent-2/25 bg-white/[0.03] backdrop-blur-sm transition-[border-color,background-color,transform] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-accent-2/50 hover:bg-white/[0.05] md:w-[320px]"
-          >
-            <div className="relative h-[160px] shrink-0 overflow-hidden">
-              {aula.image ? (
-                <Image
-                  src={aula.image}
-                  alt=""
-                  fill
-                  className="projeto-media object-cover"
-                />
-              ) : (
-                <span
-                  aria-hidden="true"
-                  className={`projeto-media absolute inset-0 ${
-                    aula.tone === "accent-1"
-                      ? "projeto-media--accent-1"
-                      : "projeto-media--accent-2"
-                  }`}
-                />
-              )}
-              <span className="absolute bottom-3 right-3 rounded-full border-[0.5px] border-white/15 bg-black-dark/80 px-3 py-1 text-xs font-medium tabular-nums text-white-light backdrop-blur-sm">
-                {aula.duration}
-              </span>
-            </div>
-
-            <div className="flex flex-col gap-2 p-6">
-              <span className="text-xs font-medium uppercase tracking-[0.14em] text-accent-1">
-                {aula.specialist}
-              </span>
-              <h3 className="text-[1.0625rem] font-semibold leading-snug tracking-[-0.01em] text-white-light">
-                {aula.topic}
-              </h3>
-            </div>
-          </article>
+            aula={aula}
+            index={index}
+          />
         ))}
       </div>
     </section>

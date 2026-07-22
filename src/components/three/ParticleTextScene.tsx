@@ -45,9 +45,14 @@ const INTRO_FRAMING = {
 };
 
 const INTRO_SCATTER_RADIUS = 180;
-const INTRO_CONVERGE_SECONDS = 1.0;
-const INTRO_HOLD_SECONDS = 0.6;
-const INTRO_REFRAME_SECONDS = 1.1;
+const INTRO_ANTICIPATION_SECONDS = 0.4;
+const INTRO_CONVERGE_SECONDS = 1.25;
+const INTRO_HOLD_SECONDS = 1.25;
+const INTRO_REFRAME_SECONDS = 0.95;
+const INTRO_REVEAL_LEAD_SECONDS = 0.45;
+const INTRO_LERP_SCALE = 1.15;
+const INTRO_PULSE_SCALE = 0.93;
+const INTRO_OPACITY_START = 0.22;
 
 const TAP_SLOP_PX = 12;
 
@@ -405,8 +410,21 @@ export function ParticleTextScene({
       applyTheme(currentTheme);
 
       const framingState = { progress: introEnabled ? 0 : 1 };
+      const introState = {
+        lerpScale: 0,
+        cloudScale: 1,
+        opacity: INTRO_OPACITY_START,
+      };
       disintegrationEnabled = !introEnabled;
-      positionLerpScale = introEnabled ? 1.9 : 1;
+      positionLerpScale = introEnabled ? 0 : 1;
+
+      const applyIntroState = () => {
+        positionLerpScale = introState.lerpScale;
+        points.scale.setScalar(introState.cloudScale);
+        material.opacity = introState.opacity;
+      };
+
+      if (introEnabled) applyIntroState();
 
       const applyFraming = () => {
         const stacked = usesStackedLayout();
@@ -695,14 +713,37 @@ export function ParticleTextScene({
       const startIntroSequence = () => {
         introTimeline = gsap.timeline();
         introTimeline
+          .to(introState, {
+            cloudScale: INTRO_PULSE_SCALE,
+            opacity: 0.68,
+            duration: INTRO_ANTICIPATION_SECONDS * 0.62,
+            ease: "sine.inOut",
+            onUpdate: applyIntroState,
+          })
+          .to(introState, {
+            cloudScale: 1,
+            duration: INTRO_ANTICIPATION_SECONDS * 0.38,
+            ease: "sine.out",
+            onUpdate: applyIntroState,
+          })
+          .to(introState, {
+            lerpScale: INTRO_LERP_SCALE,
+            opacity: 1,
+            duration: INTRO_CONVERGE_SECONDS,
+            ease: "power2.inOut",
+            onUpdate: applyIntroState,
+          })
           .to(framingState, {
             progress: 1,
             duration: INTRO_REFRAME_SECONDS,
             ease: "power3.inOut",
-            delay: INTRO_CONVERGE_SECONDS + INTRO_HOLD_SECONDS,
-            onStart: () => onRevealStartRef.current?.(),
+            delay: INTRO_HOLD_SECONDS,
             onUpdate: applyFraming,
           })
+          .add(
+            () => onRevealStartRef.current?.(),
+            `-=${INTRO_REVEAL_LEAD_SECONDS}`,
+          )
           .add(() => {
             revealHintRef.current();
             disintegrationStartTime = time;

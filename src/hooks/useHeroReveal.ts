@@ -14,9 +14,12 @@ export function useHeroReveal(scopeRef: React.RefObject<HTMLElement | null>) {
     if (!scope) return;
     if (prefersReducedMotion) return;
 
+    const header = document.querySelector("header");
+
     const context = gsap.context(() => {
       if (introPhase === "intro") {
         gsap.set(".hero-reveal", { opacity: 0, y: 28 });
+        if (header) gsap.set(header, { opacity: 0 });
         return;
       }
 
@@ -31,6 +34,14 @@ export function useHeroReveal(scopeRef: React.RefObject<HTMLElement | null>) {
           stagger: 0.1,
         },
       );
+
+      if (header) {
+        gsap.fromTo(
+          header,
+          { opacity: 0 },
+          { opacity: 1, duration: 0.9, ease: "power3.out", delay: 0.3 },
+        );
+      }
     }, scope);
 
     return () => context.revert();

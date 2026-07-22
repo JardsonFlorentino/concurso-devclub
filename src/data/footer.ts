@@ -67,4 +67,9 @@ export const FOOTER_SOCIAL: SocialLink[] = [
 export const FOOTER_TAGLINE =
   "A escola que forma desenvolvedores que o mercado disputa.";
 
-export const FOOTER_SIGNATURE = "Feito com sangue no zóio · © DevClub 2026";
+export const FOOTER_SIGNATURE = {
+  before: "Concursos DevClub · Criado por ",
+  authorName: "Jardson Florentino",
+  authorUrl: "https://www.jardsonflorentino.com.br",
+  after: " · © DevClub 2026",
+};
