@@ -604,6 +604,77 @@ html.has-custom-cursor [role="button"] {
   }
 }
 
+.projeto-card {
+  padding: 1px;
+  border-radius: 16px;
+  backface-visibility: hidden;
+  background: linear-gradient(
+    140deg,
+    color-mix(in srgb, var(--accent-1) 26%, transparent) 0%,
+    color-mix(in srgb, var(--accent-2) 26%, transparent) 100%
+  );
+  box-shadow: 0 20px 44px -26px rgba(0, 0, 0, 0.95);
+  transition:
+    transform 0.4s var(--ease-standard),
+    background 0.4s var(--ease-standard),
+    box-shadow 0.4s var(--ease-standard);
+}
+
+.projeto-card-inner {
+  border-radius: 15px;
+  overflow: hidden;
+  background: var(--black-dark);
+}
+
+.projeto-card[data-front] {
+  transform: scale(1.05);
+  background: linear-gradient(
+    140deg,
+    var(--accent-1) 0%,
+    var(--accent-2) 100%
+  );
+  box-shadow: 0 30px 64px -30px var(--accent-2);
+}
+
+.projeto-card:hover {
+  transform: scale(1.08);
+  background: linear-gradient(
+    140deg,
+    color-mix(in srgb, var(--accent-1) 82%, transparent) 0%,
+    color-mix(in srgb, var(--accent-2) 82%, transparent) 100%
+  );
+}
+
+.projeto-card--back {
+  transform: rotateY(180deg);
+  filter: brightness(0.35);
+}
+
+.projeto-card--back:hover,
+.projeto-card--back[data-front] {
+  transform: rotateY(180deg);
+}
+
+@keyframes projeto-caption {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme] .projeto-card,
+  html[data-theme] .projeto-card[data-front],
+  html[data-theme] .projeto-card:hover {
+    transform: none;
+    transition: none;
+  }
+}
+
 .projeto-media--accent-1 {
   background:
     radial-gradient(
