@@ -5,6 +5,7 @@ import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { TechOrbit } from "@/components/ui/TechOrbit";
 import {
   TECNOLOGIAS,
   TECNOLOGIAS_SUBTITLE,
@@ -14,17 +15,9 @@ import {
 
 gsap.registerPlugin(ScrollTrigger);
 
-const HIDDEN_SPOTLIGHT = "-9999px";
-
-function TechCell({ tech, lit }: { tech: Tecnologia; lit: boolean }) {
+function TechCell({ tech }: { tech: Tecnologia }) {
   return (
-    <li
-      className={`flex items-center justify-center gap-3 rounded-[14px] border px-4 py-7 transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-        lit
-          ? "border-accent-1/35 bg-white/[0.04] text-white-light"
-          : "tecnologias-reveal border-white/[0.06] text-gray-300"
-      }`}
-    >
+    <li className="flex items-center justify-center gap-3 rounded-[14px] border border-white/[0.06] px-4 py-7 text-gray-300">
       {tech.logo ? (
         <Image
           src={tech.logo}
@@ -32,7 +25,9 @@ function TechCell({ tech, lit }: { tech: Tecnologia; lit: boolean }) {
           width={28}
           height={28}
           unoptimized
-          className="h-7 w-7 object-contain"
+          className={`h-7 w-7 object-contain ${
+            tech.invert ? "tech-tile-invert" : ""
+          }`}
         />
       ) : null}
       <span className="text-[0.9375rem] font-medium tracking-[-0.01em] md:text-base">
@@ -44,25 +39,7 @@ function TechCell({ tech, lit }: { tech: Tecnologia; lit: boolean }) {
 
 export function TecnologiasSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const gridRef = useRef<HTMLDivElement | null>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
-
-  const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
-    const grid = gridRef.current;
-    if (!grid) return;
-
-    const bounds = grid.getBoundingClientRect();
-    grid.style.setProperty("--mouse-x", `${event.clientX - bounds.left}px`);
-    grid.style.setProperty("--mouse-y", `${event.clientY - bounds.top}px`);
-  };
-
-  const handlePointerLeave = () => {
-    const grid = gridRef.current;
-    if (!grid) return;
-
-    grid.style.setProperty("--mouse-x", HIDDEN_SPOTLIGHT);
-    grid.style.setProperty("--mouse-y", HIDDEN_SPOTLIGHT);
-  };
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -105,27 +82,15 @@ export function TecnologiasSection() {
           </p>
         </header>
 
-        <div
-          ref={gridRef}
-          onPointerMove={handlePointerMove}
-          onPointerLeave={handlePointerLeave}
-          className="relative mt-16"
-        >
-          <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 lg:opacity-25">
+        {prefersReducedMotion ? (
+          <ul className="mt-16 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {TECNOLOGIAS.map((tech) => (
-              <TechCell key={tech.name} tech={tech} lit={false} />
+              <TechCell key={tech.name} tech={tech} />
             ))}
           </ul>
-
-          <ul
-            aria-hidden="true"
-            className="tech-spotlight-layer pointer-events-none absolute inset-0 hidden grid-cols-4 gap-3 lg:grid"
-          >
-            {TECNOLOGIAS.map((tech) => (
-              <TechCell key={tech.name} tech={tech} lit />
-            ))}
-          </ul>
-        </div>
+        ) : (
+          <TechOrbit tecnologias={TECNOLOGIAS} />
+        )}
       </div>
     </section>
   );

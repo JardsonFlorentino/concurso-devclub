@@ -644,6 +644,61 @@ html.has-custom-cursor [role="button"] {
   filter: grayscale(0);
 }
 
+.tutor-card {
+  padding: 1px;
+  border-radius: 20px;
+  background: linear-gradient(
+    var(--card-angle, 140deg),
+    color-mix(in srgb, var(--accent-1) 20%, transparent) 0%,
+    color-mix(in srgb, var(--accent-2) 20%, transparent) 100%
+  );
+}
+
+.tutor-card[data-active] {
+  background: linear-gradient(
+    var(--card-angle, 140deg),
+    var(--accent-1) 0%,
+    var(--accent-2) 100%
+  );
+}
+
+.tutor-card:hover:not([data-active]),
+.tutor-card:focus-visible:not([data-active]) {
+  background: linear-gradient(
+    var(--card-angle, 140deg),
+    color-mix(in srgb, var(--accent-1) 58%, transparent) 0%,
+    color-mix(in srgb, var(--accent-2) 58%, transparent) 100%
+  );
+}
+
+.tutor-card-inner {
+  border-radius: 19px;
+  background: var(--black-dark);
+}
+
+.tutor-card-shade {
+  background: var(--black-dark);
+  opacity: 0.3;
+  transition: opacity 0.6s var(--ease-standard);
+}
+
+.tutor-card[data-active] .tutor-card-shade {
+  opacity: 0;
+}
+
+.tutor-card:hover .tutor-card-shade,
+.tutor-card:focus-visible .tutor-card-shade {
+  opacity: 0.1;
+}
+
+.tutor-card-photo {
+  transition: transform 0.6s var(--ease-standard);
+}
+
+.tutor-card:hover:not([data-active]) .tutor-card-photo {
+  transform: scale(1.04);
+}
+
 .tutor-portrait {
   transition:
     filter 0.6s var(--ease-standard),
@@ -685,8 +740,14 @@ html.has-custom-cursor [role="button"] {
 @media (prefers-reduced-motion: reduce) {
   html[data-theme] .projeto-media,
   html[data-theme] .tutor-media,
+  html[data-theme] .tutor-card-photo,
+  html[data-theme] .tutor-card-shade,
   html[data-theme] .tutor-portrait {
     transition: none;
+  }
+
+  html[data-theme] .tutor-card:hover:not([data-active]) .tutor-card-photo {
+    transform: none;
   }
 
   html[data-theme] .group:hover .projeto-media,
@@ -699,18 +760,78 @@ html.has-custom-cursor [role="button"] {
   }
 }
 
-.tech-spotlight-layer {
-  -webkit-mask-image: radial-gradient(
-    300px circle at var(--mouse-x, -9999px) var(--mouse-y, -9999px),
-    #000 0%,
-    rgba(0, 0, 0, 0.45) 55%,
-    transparent 78%
+.tech-tile {
+  position: relative;
+  padding: 1px;
+  border-radius: 26%;
+  background: linear-gradient(
+    var(--tile-angle, 130deg),
+    color-mix(in srgb, var(--accent-1) 62%, transparent) 0%,
+    color-mix(in srgb, var(--accent-2) 62%, transparent) 100%
   );
-  mask-image: radial-gradient(
-    300px circle at var(--mouse-x, -9999px) var(--mouse-y, -9999px),
-    #000 0%,
-    rgba(0, 0, 0, 0.45) 55%,
-    transparent 78%
+  box-shadow: 0 18px 34px -20px rgba(0, 0, 0, 0.92);
+  transition:
+    transform 0.3s var(--ease-standard),
+    background 0.3s var(--ease-standard),
+    box-shadow 0.3s var(--ease-standard);
+}
+
+.tech-tile::before {
+  content: "";
+  position: absolute;
+  inset: -14%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at 50% 50%,
+    color-mix(in srgb, var(--accent-1) 40%, transparent) 0%,
+    color-mix(in srgb, var(--accent-2) 22%, transparent) 45%,
+    transparent 72%
+  );
+  filter: blur(10px);
+  opacity: 0;
+  transition: opacity 0.3s var(--ease-standard);
+  pointer-events: none;
+}
+
+.tech-tile-inner {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  border-radius: inherit;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.06) 0%,
+      rgba(255, 255, 255, 0.015) 100%
+    ),
+    var(--black-deep);
+}
+
+.tech-tile[data-active] {
+  transform: scale(1.15);
+  background: linear-gradient(
+    var(--tile-angle, 130deg),
+    var(--accent-1) 0%,
+    var(--accent-2) 100%
+  );
+  box-shadow: 0 24px 44px -22px rgba(0, 0, 0, 0.96);
+}
+
+.tech-tile[data-active]::before {
+  opacity: 1;
+}
+
+.tech-tile-invert {
+  filter: brightness(0) invert(1);
+  opacity: 0.92;
+}
+
+.tech-orbit-glow {
+  background: radial-gradient(
+    ellipse 52% 44% at 50% 52%,
+    color-mix(in srgb, var(--accent-1) 9%, transparent) 0%,
+    color-mix(in srgb, var(--accent-2) 5%, transparent) 44%,
+    transparent 74%
   );
 }
 
@@ -735,10 +856,6 @@ html.has-custom-cursor [role="button"] {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html[data-theme] .tech-spotlight-layer {
-    display: none;
-  }
-
   html[data-theme] .aluno-row,
   html[data-theme] .aluno-portrait,
   html[data-theme] .aluno-portrait-img,

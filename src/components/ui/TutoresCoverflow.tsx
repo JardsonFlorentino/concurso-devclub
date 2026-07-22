@@ -22,7 +22,7 @@ interface Dims {
 }
 
 function dimsFor(width: number): Dims {
-  const cardW = Math.round(Math.min(300, Math.max(210, width * 0.64)));
+  const cardW = Math.round(Math.min(400, Math.max(238, width * 0.78)));
   const cardH = Math.round(cardW * 1.3);
   return {
     cardW,
@@ -178,7 +178,7 @@ export function TutoresCoverflow({ tutores }: { tutores: Tutor[] }) {
   const { cardW, cardH, spacing, depth } = dims;
 
   return (
-    <div className="relative mt-8 lg:mt-12">
+    <div className="relative mt-6 lg:mt-8">
       <div
         ref={rootRef}
         tabIndex={0}
@@ -194,7 +194,7 @@ export function TutoresCoverflow({ tutores }: { tutores: Tutor[] }) {
           dragStartRef.current = null;
         }}
         className="relative flex touch-pan-y select-none items-center justify-center overflow-hidden outline-none focus-visible:ring-1 focus-visible:ring-accent-1/40"
-        style={{ perspective: `${PERSPECTIVE}px`, height: cardH + 120 }}
+        style={{ perspective: `${PERSPECTIVE}px`, height: cardH + 76 }}
       >
         <div
           className="relative"
@@ -228,51 +228,60 @@ export function TutoresCoverflow({ tutores }: { tutores: Tutor[] }) {
                 aria-hidden={!visible}
                 aria-label={`${tutor.name}, ${tutor.specialty}`}
                 tabIndex={visible && !isActive ? 0 : -1}
-                className="absolute left-1/2 top-1/2 block overflow-hidden rounded-[18px] border-[0.5px] border-white/10 text-left"
-                style={{
-                  width: cardW,
-                  height: cardH,
-                  transformStyle: "preserve-3d",
-                  transform: `translate(-50%, -50%) translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
-                  transition: `transform ${MOVE_DUR}s ${EASE}, opacity ${MOVE_DUR}s ${EASE}, box-shadow ${MOVE_DUR}s ${EASE}`,
-                  opacity: visible ? 1 : 0,
-                  pointerEvents: visible ? "auto" : "none",
-                  cursor: isActive ? "default" : "pointer",
-                  backgroundColor: "var(--black-dark)",
-                  boxShadow: isActive
-                    ? "0 34px 90px -34px var(--accent-2)"
-                    : "none",
-                }}
+                data-active={isActive || undefined}
+                className="tutor-card absolute left-1/2 top-1/2 block text-left"
+                style={
+                  {
+                    width: cardW,
+                    height: cardH,
+                    transformStyle: "preserve-3d",
+                    transform: `translate(-50%, -50%) translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`,
+                    transition: `transform ${MOVE_DUR}s ${EASE}, opacity ${MOVE_DUR}s ${EASE}, box-shadow ${MOVE_DUR}s ${EASE}, background ${MOVE_DUR}s ${EASE}`,
+                    opacity: visible ? 1 : 0,
+                    pointerEvents: visible ? "auto" : "none",
+                    cursor: isActive ? "default" : "pointer",
+                    "--card-angle": `${104 + index * 23}deg`,
+                    boxShadow: isActive
+                      ? "0 34px 90px -34px var(--accent-2)"
+                      : "none",
+                  } as React.CSSProperties
+                }
               >
-                <TutorPortrait tutor={tutor} index={index} />
-
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-0"
-                  style={{
-                    background:
-                      "linear-gradient(180deg, transparent 44%, color-mix(in srgb, var(--black-dark) 90%, transparent) 100%)",
-                  }}
-                />
-
-                <span className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col gap-0.5 p-5">
-                  <span className="text-[1.25rem] font-semibold leading-tight tracking-[-0.02em] text-white-light">
-                    {tutor.name}
+                <span className="tutor-card-inner relative block h-full w-full overflow-hidden">
+                  <span className="tutor-card-photo absolute inset-0 block">
+                    <TutorPortrait tutor={tutor} index={index} />
                   </span>
-                  <span className="text-sm font-medium text-accent-1">
-                    {tutor.specialty}
+
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0"
+                    style={{
+                      background:
+                        "linear-gradient(180deg, transparent 44%, color-mix(in srgb, var(--black-dark) 90%, transparent) 100%)",
+                    }}
+                  />
+
+                  <span
+                    className="pointer-events-none absolute inset-x-0 bottom-0 flex flex-col gap-0.5 p-5"
+                    style={{
+                      opacity: isActive ? 1 : 0,
+                      transform: `translateY(${isActive ? 0 : 10}px)`,
+                      transition: `opacity ${MOVE_DUR}s ${EASE}, transform ${MOVE_DUR}s ${EASE}`,
+                    }}
+                  >
+                    <span className="text-[1.25rem] font-semibold leading-tight tracking-[-0.02em] text-white-light">
+                      {tutor.name}
+                    </span>
+                    <span className="text-sm font-medium text-accent-1">
+                      {tutor.specialty}
+                    </span>
                   </span>
+
+                  <span
+                    aria-hidden="true"
+                    className="tutor-card-shade pointer-events-none absolute inset-0"
+                  />
                 </span>
-
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-0"
-                  style={{
-                    background: "var(--black-dark)",
-                    opacity: isActive ? 0 : 0.55,
-                    transition: `opacity ${MOVE_DUR}s ${EASE}`,
-                  }}
-                />
               </button>
             );
           })}
