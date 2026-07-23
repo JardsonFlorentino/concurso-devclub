@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import { BonusCard } from "@/components/ui/BonusCard";
+import { BonusFan } from "@/components/ui/BonusFan";
 import { AULAS_BONUS, BONUS_SUBTITLE, BONUS_TITLE } from "@/data/bonus";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -54,15 +54,8 @@ export function BonusSection() {
           </p>
         </header>
 
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {AULAS_BONUS.map((aula, index) => (
-          <BonusCard
-            key={`${aula.specialist}-${aula.topic}`}
-            aula={aula}
-            index={index}
-          />
-        ))}
-        </div>
+        <BonusFan aulas={AULAS_BONUS} />
+
       </div>
     </section>
   );

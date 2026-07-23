@@ -15,6 +15,7 @@ export interface AulaBonus {
   duration: string;
   tone: BonusTone;
   image?: string;
+  photo?: string;
 }
 
 export const AULAS_BONUS: AulaBonus[] = [
