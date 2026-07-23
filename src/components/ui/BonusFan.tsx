@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Play } from "lucide-react";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { VideoLightbox } from "@/components/ui/VideoLightbox";
 import type { AulaBonus } from "@/data/bonus";
 
 const MOVE_DUR = 0.62;
@@ -46,9 +47,27 @@ function initialsOf(name: string) {
 }
 
 function CardFace({ aula, index }: { aula: AulaBonus; index: number }) {
+  const [thumbLevel, setThumbLevel] = useState(0);
+  const thumb =
+    aula.youtubeId && thumbLevel < 2
+      ? `https://img.youtube.com/vi/${aula.youtubeId}/${
+          thumbLevel === 0 ? "maxresdefault" : "hqdefault"
+        }.jpg`
+      : null;
+
   return (
     <>
-      {aula.photo ? (
+      {thumb ? (
+        <Image
+          src={thumb}
+          alt=""
+          fill
+          unoptimized
+          sizes="(max-width: 680px) 70vw, 310px"
+          onError={() => setThumbLevel((level) => level + 1)}
+          className="object-cover"
+        />
+      ) : aula.photo ? (
         <Image
           src={aula.photo}
           alt=""
@@ -104,6 +123,7 @@ export function BonusFan({ aulas }: { aulas: AulaBonus[] }) {
   const movedRef = useRef(false);
   const dragRef = useRef<number | null>(null);
   const [active, setActive] = useState(0);
+  const [playing, setPlaying] = useState<AulaBonus | null>(null);
   const [fan, setFan] = useState<Fan>(() => fanFor(900));
   const prefersReducedMotion = usePrefersReducedMotion();
 
@@ -144,7 +164,13 @@ export function BonusFan({ aulas }: { aulas: AulaBonus[] }) {
     [active, lock],
   );
 
+  const closePlayer = useCallback(() => {
+    setPlaying(null);
+    rootRef.current?.focus();
+  }, []);
+
   const onKeyDown = (event: React.KeyboardEvent) => {
+    if (playing) return;
     if (event.key === "ArrowRight") {
       event.preventDefault();
       step(1);
@@ -264,6 +290,30 @@ export function BonusFan({ aulas }: { aulas: AulaBonus[] }) {
                     style={{ opacity: isActive ? 0 : 0.32 }}
                   />
                 </button>
+
+                {isActive && aula.youtubeId ? (
+                  <button
+                    type="button"
+                    onPointerDown={(event) => event.stopPropagation()}
+                    onPointerUp={(event) => event.stopPropagation()}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      if (movedRef.current) return;
+                      setPlaying(aula);
+                    }}
+                    aria-label={`Assistir ${aula.topic}`}
+                    className="bonus-fan-play absolute left-1/2 top-1/2 z-10 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full"
+                  >
+                    <span className="bonus-fan-play-inner flex h-full w-full items-center justify-center rounded-full">
+                      <Play
+                        size={20}
+                        strokeWidth={1.75}
+                        fill="currentColor"
+                        className="ml-0.5 text-white-light"
+                      />
+                    </span>
+                  </button>
+                ) : null}
               </article>
             );
           })}
@@ -306,6 +356,14 @@ export function BonusFan({ aulas }: { aulas: AulaBonus[] }) {
           <ChevronRight size={18} strokeWidth={1.5} aria-hidden="true" />
         </button>
       </div>
+
+      {playing?.youtubeId ? (
+        <VideoLightbox
+          youtubeId={playing.youtubeId}
+          title={`${playing.topic}, com ${playing.specialist}`}
+          onClose={closePlayer}
+        />
+      ) : null}
     </div>
   );
 }
