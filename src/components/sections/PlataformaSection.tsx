@@ -76,6 +76,8 @@ export function PlataformaSection() {
           trigger: track,
           start: "top top",
           end: "bottom bottom",
+          invalidateOnRefresh: true,
+          refreshPriority: -1,
           onUpdate: (self) => {
             const index = Math.min(
               TOTAL - 1,
@@ -84,6 +86,8 @@ export function PlataformaSection() {
             setActive((current) => (current === index ? current : index));
           },
         });
+
+        ScrollTrigger.refresh();
 
         return () => trigger.kill();
       },
@@ -108,12 +112,12 @@ export function PlataformaSection() {
           className={
             prefersReducedMotion
               ? ""
-              : "lg:sticky lg:top-0 lg:flex lg:h-screen lg:items-center"
+              : "lg:sticky lg:top-0 lg:flex lg:h-screen lg:items-center lg:overflow-hidden lg:py-10"
           }
         >
-          <div className="mx-auto grid w-full max-w-[1180px] gap-12 px-6 md:px-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-center lg:gap-16">
+          <div className="mx-auto grid w-full max-w-[1180px] gap-12 px-6 md:px-10 lg:max-h-full lg:min-h-0 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-center lg:gap-16">
             <div className="flex flex-col gap-7 lg:gap-6">
-              <header className="flex flex-col gap-5">
+              <header className="flex flex-col gap-5 lg:gap-4">
                 <h2 className="plataforma-reveal text-[clamp(2rem,4.2vw,3.75rem)] font-semibold leading-[1.12] tracking-[-0.03em] text-white-light">
                   {PLATAFORMA_TITLE.before}
                   <span className="text-accent-1">
@@ -121,7 +125,7 @@ export function PlataformaSection() {
                   </span>
                   {PLATAFORMA_TITLE.after}
                 </h2>
-                <p className="plataforma-reveal max-w-[46ch] text-[0.9375rem] leading-relaxed text-gray-300">
+                <p className="plataforma-reveal max-w-[46ch] text-[0.9375rem] leading-relaxed text-gray-300 lg:max-w-[42ch] lg:text-sm">
                   {PLATAFORMA_DESCRIPTION}
                 </p>
               </header>
@@ -171,7 +175,7 @@ export function PlataformaSection() {
                 className="plataforma-glow pointer-events-none absolute -inset-12 -z-10"
               />
 
-              <div className="relative aspect-[4/3] w-full">
+              <div className="relative mx-auto aspect-[4/3] w-full max-h-[46vh]">
                 {PLATAFORMA_FEATURES.map((feature, index) => (
                   <div
                     key={feature.title}
@@ -186,7 +190,7 @@ export function PlataformaSection() {
                 ))}
               </div>
 
-              <div className="mt-7 flex items-center justify-center gap-2">
+              <div className="mt-6 flex items-center justify-center gap-2">
                 {PLATAFORMA_FEATURES.map((feature, index) => (
                   <span
                     key={feature.title}
