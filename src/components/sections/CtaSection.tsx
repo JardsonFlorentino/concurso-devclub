@@ -58,9 +58,11 @@ export function CtaSection() {
           {CTA_SUBTITLE}
         </p>
         <div className="cta-reveal">
-          <MagneticButton href={CTA_BUTTON.href} className="px-9 py-5 text-lg">
-            {CTA_BUTTON.label}
-          </MagneticButton>
+          <span data-cursor="accent">
+            <MagneticButton href={CTA_BUTTON.href} className="px-9 py-5 text-lg">
+              {CTA_BUTTON.label}
+            </MagneticButton>
+          </span>
         </div>
       </div>
     </section>

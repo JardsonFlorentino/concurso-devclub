@@ -11,45 +11,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 export function BonusSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
-  const viewportRef = useRef<HTMLDivElement | null>(null);
   const prefersReducedMotion = usePrefersReducedMotion();
-
-  useEffect(() => {
-    const viewport = viewportRef.current;
-    if (!viewport) return;
-
-    let dragging = false;
-    let dragStartX = 0;
-    let dragStartScroll = 0;
-
-    const onPointerDown = (event: PointerEvent) => {
-      if (event.pointerType !== "mouse") return;
-      dragging = true;
-      dragStartX = event.clientX;
-      dragStartScroll = viewport.scrollLeft;
-    };
-
-    const onPointerMove = (event: PointerEvent) => {
-      if (!dragging) return;
-      viewport.scrollLeft = dragStartScroll + (dragStartX - event.clientX);
-    };
-
-    const stopDragging = () => {
-      dragging = false;
-    };
-
-    viewport.addEventListener("pointerdown", onPointerDown);
-    window.addEventListener("pointermove", onPointerMove);
-    window.addEventListener("pointerup", stopDragging);
-    window.addEventListener("pointercancel", stopDragging);
-
-    return () => {
-      viewport.removeEventListener("pointerdown", onPointerDown);
-      window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerup", stopDragging);
-      window.removeEventListener("pointercancel", stopDragging);
-    };
-  }, []);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -78,7 +40,6 @@ export function BonusSection() {
     <section
       id="bonus"
       ref={sectionRef}
-      data-cursor="drag"
       className="relative bg-background-deep py-[130px]"
     >
       <div className="relative z-10 mx-auto max-w-[1180px] px-6 md:px-10">
@@ -92,12 +53,8 @@ export function BonusSection() {
             {BONUS_SUBTITLE}
           </p>
         </header>
-      </div>
 
-      <div
-        ref={viewportRef}
-        className="mt-14 flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-pl-6 px-6 pb-4 md:scroll-pl-10 md:px-10 lg:scroll-pl-[max(2.5rem,calc((100vw-1180px)/2+2.5rem))] lg:px-[max(2.5rem,calc((100vw-1180px)/2+2.5rem))] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      >
+        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {AULAS_BONUS.map((aula, index) => (
           <BonusCard
             key={`${aula.specialist}-${aula.topic}`}
@@ -105,6 +62,7 @@ export function BonusSection() {
             index={index}
           />
         ))}
+        </div>
       </div>
     </section>
   );

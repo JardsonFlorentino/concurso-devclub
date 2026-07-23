@@ -42,6 +42,7 @@ export interface Depoimento {
   name: string;
   role: string;
   company: string;
+  photo: string;
 }
 
 export const DEPOIMENTOS: Depoimento[] = [
@@ -51,6 +52,7 @@ export const DEPOIMENTOS: Depoimento[] = [
     name: "Marina Rocha",
     role: "Desenvolvedora Front-End",
     company: "Órbita Digital",
+    photo: "/alunos/testimonial-1.jpg",
   },
   {
     quote:
@@ -58,6 +60,7 @@ export const DEPOIMENTOS: Depoimento[] = [
     name: "Thiago Souza",
     role: "Desenvolvedor Back-End",
     company: "Vetor Sistemas",
+    photo: "/alunos/testimonial-2.jpg",
   },
   {
     quote:
@@ -65,5 +68,6 @@ export const DEPOIMENTOS: Depoimento[] = [
     name: "Camila Lima",
     role: "Desenvolvedora Full Stack",
     company: "Nuvem Nove",
+    photo: "/alunos/testimonial-3.jpg",
   },
 ];

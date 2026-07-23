@@ -5,6 +5,7 @@ import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { DepoimentosShowcase } from "@/components/ui/DepoimentosShowcase";
 import {
   ALUNOS,
   COMUNIDADE_HIGHLIGHT_LABEL,
@@ -135,26 +136,8 @@ export function ComunidadeSection() {
           })}
         </ul>
 
-        <div className="mt-16 grid gap-5 md:grid-cols-3">
-          {DEPOIMENTOS.map((depoimento) => (
-            <figure
-              key={depoimento.name}
-              className="alunos-reveal flex flex-col justify-between gap-8 rounded-[14px] border-[0.5px] border-accent-2/25 bg-white/[0.03] p-7 backdrop-blur-sm transition-[border-color,background-color] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:border-accent-2/50 hover:bg-white/[0.05]"
-            >
-              <blockquote className="text-[1.0625rem] italic leading-relaxed text-gray-300">
-                “{depoimento.quote}”
-              </blockquote>
-              <figcaption className="flex flex-col gap-1">
-                <span className="text-[0.9375rem] font-semibold text-white-light">
-                  {depoimento.name}
-                </span>
-                <span className="text-sm text-gray-300">
-                  {depoimento.role} · {depoimento.company}
-                </span>
-              </figcaption>
-            </figure>
-          ))}
-        </div>
+        <DepoimentosShowcase depoimentos={DEPOIMENTOS} />
+
       </div>
     </section>
   );

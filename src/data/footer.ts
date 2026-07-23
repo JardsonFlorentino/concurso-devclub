@@ -1,4 +1,4 @@
-export const CTA_HEADLINE = "Bora ser dev?";
+export const CTA_HEADLINE = "Bora ser DEV?";
 
 export const CTA_SUBTITLE =
   "A próxima turma começa agora. O primeiro passo é o mesmo pra todo mundo: decidir.";

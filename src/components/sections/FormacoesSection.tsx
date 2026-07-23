@@ -23,6 +23,7 @@ const LANE_SCALE_EDGE = 0.92;
 const LANE_DEPTH = 180;
 const LANE_OPACITY_EDGE = 0.75;
 const FOCUS_THRESHOLD = 0.24;
+const PIN_DISTANCE_RATIO = 0.62;
 
 export function FormacoesSection() {
   const pinRef = useRef<HTMLDivElement | null>(null);
@@ -37,6 +38,7 @@ export function FormacoesSection() {
   const hasEnteredRef = useRef(false);
   const lanesRef = useRef<{ element: HTMLElement; center: number }[]>([]);
   const curvedRef = useRef(false);
+  const [focus, setFocus] = useState(0);
 
   const [activeTab, setActiveTab] = useState<string>(ALL_TAB);
   const prefersReducedMotion = usePrefersReducedMotion();
@@ -64,6 +66,15 @@ export function FormacoesSection() {
     );
     return map;
   }, [activeTab]);
+
+  const totalCards = useMemo(
+    () =>
+      (activeTab === ALL_TAB
+        ? FORMACAO_CATEGORIES
+        : FORMACAO_CATEGORIES.filter((category) => category.number === activeTab)
+      ).reduce((sum, category) => sum + category.items.length, 0),
+    [activeTab],
+  );
 
   const visibleCategories = useMemo(
     () =>
@@ -132,6 +143,8 @@ export function FormacoesSection() {
         lane.element.removeAttribute("data-focus");
       }
     });
+
+    setFocus((current) => (current === focusIndex ? current : focusIndex));
   }, []);
 
   const resetLanes = useCallback(() => {
@@ -216,7 +229,8 @@ export function FormacoesSection() {
           scrollTrigger: {
             trigger: pin,
             start: "top top",
-            end: () => `+=${Math.max(getDistance(), 1)}`,
+            end: () =>
+              `+=${Math.max(getDistance() * PIN_DISTANCE_RATIO, 1)}`,
             pin: true,
             scrub: 1,
             invalidateOnRefresh: true,
@@ -470,12 +484,37 @@ export function FormacoesSection() {
 
         <div
           ref={progressBarRef}
-          className="absolute inset-x-6 bottom-8 z-10 h-px bg-white/10 transition-opacity duration-500 md:inset-x-10"
+          className="absolute inset-x-6 bottom-8 z-10 flex items-center gap-4 transition-opacity duration-500 md:inset-x-10"
         >
-          <span
-            ref={progressRef}
-            className="block h-full origin-left scale-x-0 bg-accent-1"
-          />
+          <span className="shrink-0 font-mono text-xs tabular-nums tracking-[-0.02em] text-gray-400">
+            <span className="text-accent-1">
+              {String(Math.min(focus + 1, totalCards)).padStart(2, "0")}
+            </span>
+            <span className="px-1 text-gray-500">/</span>
+            {String(totalCards).padStart(2, "0")}
+          </span>
+
+          <span className="flex flex-1 items-center gap-1.5">
+            {visibleCategories.map((category) => (
+              <span
+                key={category.number}
+                style={{ flexGrow: category.items.length }}
+                className="relative h-px bg-white/10"
+              >
+                <span
+                  className="absolute inset-y-0 left-0 origin-left bg-accent-1/25"
+                  style={{ width: "100%" }}
+                />
+              </span>
+            ))}
+          </span>
+
+          <span className="absolute inset-x-0 bottom-0 h-px">
+            <span
+              ref={progressRef}
+              className="ml-[76px] block h-full origin-left scale-x-0 bg-accent-1"
+            />
+          </span>
         </div>
       </div>
 

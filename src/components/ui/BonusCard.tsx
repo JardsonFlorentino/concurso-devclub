@@ -8,6 +8,7 @@ import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import type { AulaBonus } from "@/data/bonus";
 
 const MAX_TILT_DEG = 3;
+const WAVE = [38, 66, 92, 54, 78, 44, 70, 96, 50, 62, 34, 58];
 
 export function BonusCard({ aula, index }: { aula: AulaBonus; index: number }) {
   const cardRef = useRef<HTMLElement | null>(null);
@@ -51,7 +52,7 @@ export function BonusCard({ aula, index }: { aula: AulaBonus; index: number }) {
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
       style={{ "--card-angle": `${118 + index * 23}deg` } as React.CSSProperties}
-      className="bonus-reveal bonus-card group w-[280px] shrink-0 snap-start md:w-[320px]"
+      className="bonus-reveal bonus-card group h-full"
     >
       <div className="bonus-card-inner relative flex h-full flex-col overflow-hidden">
         <div className="relative h-[168px] shrink-0 overflow-hidden">
@@ -97,12 +98,22 @@ export function BonusCard({ aula, index }: { aula: AulaBonus; index: number }) {
             </span>
           </span>
 
+          <span className="bonus-wave pointer-events-none absolute bottom-3 left-4 flex h-5 items-end gap-[3px]">
+            {WAVE.map((height, bar) => (
+              <span
+                key={bar}
+                style={{ height: `${height}%`, animationDelay: `${bar * 0.09}s` }}
+                className="bonus-wave-bar w-[3px] rounded-full bg-white/55"
+              />
+            ))}
+          </span>
+
           <span className="absolute bottom-3 right-3 rounded-[6px] bg-black-dark/85 px-2 py-1 text-[11px] font-medium tabular-nums leading-none text-white-light backdrop-blur-sm">
             {aula.duration}
           </span>
         </div>
 
-        <div className="flex flex-1 flex-col gap-1.5 p-6">
+        <div className="flex flex-1 flex-col gap-1.5 p-6 pb-7">
           <span className="text-[11px] font-medium uppercase tracking-[0.16em] text-accent-1">
             {aula.specialist}
           </span>

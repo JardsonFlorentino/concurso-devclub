@@ -64,7 +64,7 @@ export function AlemDoCodigoSection() {
     <section
       id="alem-do-codigo"
       ref={sectionRef}
-      className="relative bg-background py-[130px]"
+      className="relative bg-background pb-[190px] pt-[160px]"
     >
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
         <div className="aurora-blob aurora-blob--b1" />
