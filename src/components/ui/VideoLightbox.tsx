@@ -38,8 +38,6 @@ export function VideoLightbox({ youtubeId, title, onClose }: VideoLightboxProps)
 
   useEffect(() => {
     const lenis = getSmoothScrollInstance();
-    const previousOverflow = document.body.style.overflow;
-    const previousPadding = document.body.style.paddingRight;
     const gap = window.innerWidth - document.documentElement.clientWidth;
 
     lenis?.stop();
@@ -61,8 +59,8 @@ export function VideoLightbox({ youtubeId, title, onClose }: VideoLightboxProps)
 
     return () => {
       document.removeEventListener("keydown", onKeyDown);
-      document.body.style.overflow = previousOverflow;
-      document.body.style.paddingRight = previousPadding;
+      document.body.style.overflow = "";
+      document.body.style.paddingRight = "";
       lenis?.start();
     };
   }, [onClose, trapFocus]);

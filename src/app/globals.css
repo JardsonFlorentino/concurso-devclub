@@ -1485,6 +1485,108 @@ html.has-custom-cursor [role="button"] {
   }
 }
 
+.menu-burger-lines {
+  position: relative;
+  display: block;
+  height: 14px;
+  width: 24px;
+}
+
+.menu-burger-line {
+  position: absolute;
+  left: 0;
+  height: 1.5px;
+  width: 100%;
+  border-radius: 2px;
+  background: var(--white-light);
+  transition:
+    transform 0.42s var(--ease-standard),
+    opacity 0.28s var(--ease-standard);
+}
+
+.menu-burger-line:nth-child(1) {
+  top: 0;
+}
+
+.menu-burger-line:nth-child(2) {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.menu-burger-line:nth-child(3) {
+  bottom: 0;
+}
+
+.menu-burger[data-open] .menu-burger-line:nth-child(1) {
+  transform: translateY(6.25px) rotate(45deg);
+}
+
+.menu-burger[data-open] .menu-burger-line:nth-child(2) {
+  opacity: 0;
+  transform: translateY(-50%) scaleX(0.4);
+}
+
+.menu-burger[data-open] .menu-burger-line:nth-child(3) {
+  transform: translateY(-6.25px) rotate(-45deg);
+}
+
+.mobile-menu {
+  overflow: hidden;
+  background: color-mix(in srgb, var(--black-dark) 88%, transparent);
+  backdrop-filter: blur(22px);
+  opacity: 0;
+  transform: scale(1.03);
+  transition:
+    opacity 0.42s var(--ease-standard),
+    transform 0.42s var(--ease-standard);
+}
+
+.mobile-menu[data-visible] {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.mobile-menu-aurora {
+  position: absolute;
+  inset: -20% -30% auto -30%;
+  height: 70%;
+  border-radius: 9999px;
+  background: radial-gradient(
+    ellipse 60% 60% at 30% 40%,
+    color-mix(in srgb, var(--accent-1) 24%, transparent) 0%,
+    transparent 62%
+  ),
+  radial-gradient(
+    ellipse 60% 60% at 74% 66%,
+    color-mix(in srgb, var(--accent-2) 26%, transparent) 0%,
+    transparent 64%
+  );
+  filter: blur(70px);
+  pointer-events: none;
+}
+
+.mobile-menu-rule {
+  display: block;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    var(--accent-1) 0%,
+    var(--accent-2) 100%
+  );
+  opacity: 0.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html[data-theme] .mobile-menu,
+  html[data-theme] .menu-burger-line {
+    transition: none;
+  }
+
+  html[data-theme] .mobile-menu-reveal {
+    transform: none;
+  }
+}
+
 .whatsapp-fab {
   opacity: 0;
   transform: translateY(18px) scale(0.86);

@@ -73,12 +73,11 @@ export const PROJETOS: Projeto[] = [
     image: "/projetos/automacao.jpg",
   },
   {
-    name: "Agente de atendimento",
-    description:
-      "Assistente que responde sobre a base de conhecimento da empresa com contexto.",
-    stack: ["LangChain", "OpenAI", "Node.js"],
+  name: "Sistema de agendamento",
+    description: "Agenda com disponibilidade em tempo real, confirmação por e-mail e lembretes automáticos.",
+    stack: ["Next.js", "Prisma", "PostgreSQL"],
     tone: "accent-2",
-    mockup: "chat",
-    image: "/projetos/atendimento.jpg",
-  },
+    mockup: "dashboard",
+    image: "/projetos/agendamento.jpg",
+  }
 ];

@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import gsap from "gsap";
 import { useMagnetic } from "@/hooks/useMagnetic";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
-import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
 import { useIntroPhase } from "@/hooks/useIntroPhase";
+import { MobileMenu } from "@/components/ui/MobileMenu";
 import {
   BRAND_LOGO,
   BRAND_NAME,
@@ -50,74 +50,46 @@ function SecondaryCta({ onNavigate }: { onNavigate?: () => void }) {
   );
 }
 
-function MobileMenuPanel({ onClose }: { onClose: () => void }) {
-  const panelRef = useRef<HTMLDivElement | null>(null);
-  const prefersReducedMotion = usePrefersReducedMotion();
-
-  useEffect(() => {
-    if (prefersReducedMotion) return;
-    const context = gsap.context(() => {
-      gsap.fromTo(
-        ".mobile-menu-item",
-        { opacity: 0, y: 28 },
-        { opacity: 1, y: 0, duration: 0.8, ease: "power3.out", stagger: 0.08, delay: 0.05 },
-      );
-    }, panelRef);
-    return () => context.revert();
-  }, [prefersReducedMotion]);
-
-  return (
-    <div
-      ref={panelRef}
-      className="fixed inset-0 z-40 flex flex-col justify-center bg-black-dark px-6 lg:hidden"
-    >
-      <nav className="flex flex-col gap-1">
-        {NAV_LINKS.map((link) => (
-          <a
-            key={link.href}
-            href={link.href}
-            onClick={onClose}
-            className="mobile-menu-item py-1.5 text-[clamp(2.5rem,11vw,4rem)] font-bold leading-[1.06] tracking-[-0.04em] text-white-light"
-          >
-            {link.label}
-          </a>
-        ))}
-      </nav>
-
-      <div className="mobile-menu-item mt-12 flex flex-col gap-3 border-t border-white/10 pt-8">
-        <a
-          href={HEADER_SECONDARY_CTA.href}
-          target={HEADER_SECONDARY_CTA.target}
-          rel={HEADER_SECONDARY_CTA.rel}
-          onClick={onClose}
-          className="rounded-[14px] border border-white/15 px-6 py-3.5 text-center text-base font-medium text-gray-300"
-        >
-          {HEADER_SECONDARY_CTA.label}
-        </a>
-        <a
-          href={HEADER_PRIMARY_CTA.href}
-          onClick={onClose}
-          className="rounded-[14px] bg-accent-1 px-6 py-3.5 text-center text-base font-semibold text-black-dark"
-        >
-          {HEADER_PRIMARY_CTA.label}
-        </a>
-      </div>
-    </div>
-  );
-}
-
 export function Header() {
   const { isScrolled, isHidden } = useScrollDirection();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [menuMounted, setMenuMounted] = useState(false);
+  const [activeHref, setActiveHref] = useState<string | null>(null);
   const headerRef = useRef<HTMLElement | null>(null);
   const introPhase = useIntroPhase();
 
+  const openMenu = () => {
+    setMenuMounted(true);
+    window.setTimeout(() => setMenuOpen(true), 20);
+  };
+
+  const closeMenu = useCallback(() => {
+    setMenuOpen(false);
+    window.setTimeout(() => setMenuMounted(false), 420);
+  }, []);
+
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [menuOpen]);
+    if (typeof IntersectionObserver === "undefined") return;
+
+    const sections = NAV_LINKS.map((link) =>
+      document.querySelector<HTMLElement>(link.href),
+    ).filter((element): element is HTMLElement => Boolean(element));
+
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (visible?.target.id) setActiveHref(`#${visible.target.id}`);
+      },
+      { rootMargin: "-45% 0px -45% 0px" },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const header = headerRef.current;
@@ -192,26 +164,27 @@ export function Header() {
             type="button"
             aria-label={menuOpen ? "Fechar menu" : "Abrir menu"}
             aria-expanded={menuOpen}
-            onClick={() => setMenuOpen((open) => !open)}
-            className="relative z-50 -mr-2 flex h-10 w-10 shrink-0 flex-col items-center justify-center gap-[5px] lg:hidden"
+            aria-controls="mobile-menu"
+            data-open={menuOpen || undefined}
+            onClick={() => (menuOpen ? closeMenu() : openMenu())}
+            className="menu-burger relative z-50 -mr-2 flex h-10 w-10 shrink-0 items-center justify-center lg:hidden"
           >
-            <span
-              style={{ transitionTimingFunction: EASE_STANDARD }}
-              className={`h-px w-6 bg-white-light transition-transform duration-300 ${
-                menuOpen ? "translate-y-[3px] rotate-45" : ""
-              }`}
-            />
-            <span
-              style={{ transitionTimingFunction: EASE_STANDARD }}
-              className={`h-px w-6 bg-white-light transition-transform duration-300 ${
-                menuOpen ? "-translate-y-[3px] -rotate-45" : ""
-              }`}
-            />
+            <span aria-hidden="true" className="menu-burger-lines">
+              <span className="menu-burger-line" />
+              <span className="menu-burger-line" />
+              <span className="menu-burger-line" />
+            </span>
           </button>
         </div>
       </header>
 
-      {menuOpen && <MobileMenuPanel onClose={() => setMenuOpen(false)} />}
+      {menuMounted ? (
+        <MobileMenu
+          visible={menuOpen}
+          activeHref={activeHref}
+          onClose={closeMenu}
+        />
+      ) : null}
     </>
   );
 }
