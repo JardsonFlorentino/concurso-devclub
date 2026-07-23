@@ -1657,28 +1657,67 @@ html.has-custom-cursor [role="button"] {
   }
 }
 
-.plataforma-item[data-active] {
-  border-color: color-mix(in srgb, var(--accent-1) 26%, transparent);
-  background: color-mix(in srgb, var(--accent-1) 7%, transparent);
-}
+@media (max-width: 1023px) {
+  .plataforma-item[data-open] {
+    border-color: color-mix(in srgb, var(--accent-1) 26%, transparent);
+    background: color-mix(in srgb, var(--accent-1) 7%, transparent);
+  }
 
-.plataforma-item[data-active] .plataforma-item-icon {
-  border-color: color-mix(in srgb, var(--accent-1) 55%, transparent);
-  background: color-mix(in srgb, var(--accent-1) 14%, transparent);
-  color: var(--accent-1);
-}
+  .plataforma-item[data-open] .plataforma-item-icon {
+    border-color: color-mix(in srgb, var(--accent-1) 55%, transparent);
+    background: color-mix(in srgb, var(--accent-1) 14%, transparent);
+    color: var(--accent-1);
+  }
 
-.plataforma-item[data-active] .plataforma-item-title {
-  color: var(--white-light);
-}
+  .plataforma-item[data-open] .plataforma-item-title {
+    color: var(--white-light);
+  }
 
-.plataforma-item[data-active] .plataforma-item-text {
-  color: var(--gray-300);
+  .plataforma-item[data-open] .plataforma-item-text {
+    color: var(--gray-300);
+  }
+
+  .plataforma-item-chevron {
+    color: var(--gray-500);
+    transition:
+      transform 0.5s var(--ease-standard),
+      color 0.5s var(--ease-standard);
+  }
+
+  .plataforma-item[data-open] .plataforma-item-chevron {
+    transform: rotate(180deg);
+    color: var(--accent-1);
+  }
+
+  .plataforma-item-panel {
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.55s var(--ease-standard);
+  }
+
+  .plataforma-item[data-open] .plataforma-item-panel {
+    grid-template-rows: 1fr;
+  }
 }
 
 @media (min-width: 1024px) {
   .plataforma-item[data-active] {
+    border-color: color-mix(in srgb, var(--accent-1) 26%, transparent);
+    background: color-mix(in srgb, var(--accent-1) 7%, transparent);
     transform: scale(1.02);
+  }
+
+  .plataforma-item[data-active] .plataforma-item-icon {
+    border-color: color-mix(in srgb, var(--accent-1) 55%, transparent);
+    background: color-mix(in srgb, var(--accent-1) 14%, transparent);
+    color: var(--accent-1);
+  }
+
+  .plataforma-item[data-active] .plataforma-item-title {
+    color: var(--white-light);
+  }
+
+  .plataforma-item[data-active] .plataforma-item-text {
+    color: var(--gray-300);
   }
 }
 
@@ -1735,6 +1774,16 @@ html.has-custom-cursor [role="button"] {
 
   html[data-theme] .plataforma-item[data-active] {
     transform: none;
+  }
+
+  html[data-theme] .plataforma-item-panel,
+  html[data-theme] .plataforma-item[data-open] .plataforma-item-panel {
+    grid-template-rows: 1fr;
+    transition: none;
+  }
+
+  html[data-theme] .plataforma-item-chevron {
+    transition: none;
   }
 }
 

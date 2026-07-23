@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
+  ChevronDown,
   MessagesSquare,
   MonitorPlay,
   Route,
@@ -40,6 +41,7 @@ export function PlataformaSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const trackRef = useRef<HTMLDivElement | null>(null);
   const [active, setActive] = useState(0);
+  const [open, setOpen] = useState(0);
   const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
@@ -135,7 +137,7 @@ export function PlataformaSection() {
                 </p>
               </header>
 
-              <ul className="plataforma-reveal flex flex-col gap-1 lg:gap-0.5">
+              <ul className="plataforma-reveal flex flex-col gap-2 lg:gap-0.5">
                 {PLATAFORMA_FEATURES.map((feature, index) => {
                   const Icon = ICONS[feature.icon];
                   const current = index === active;
@@ -144,28 +146,55 @@ export function PlataformaSection() {
                     <li
                       key={feature.title}
                       data-active={current || undefined}
-                      className="plataforma-item flex flex-col gap-4 rounded-[12px] px-4 py-3 lg:py-2"
+                      data-open={index === open || undefined}
+                      className="plataforma-item flex flex-col rounded-[12px] px-4 py-3 lg:py-2"
                     >
-                      <div className="flex items-start gap-3.5">
+                      <button
+                        type="button"
+                        aria-expanded={index === open}
+                        aria-controls={`plataforma-painel-${index}`}
+                        onClick={() =>
+                          setOpen((current) => (current === index ? -1 : index))
+                        }
+                        className="flex w-full items-start gap-3.5 text-left lg:pointer-events-none"
+                      >
                         <span className="plataforma-item-icon mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] border-[0.5px]">
                           <Icon size={17} strokeWidth={1.5} aria-hidden="true" />
                         </span>
 
-                        <div className="flex flex-col">
+                        <div className="flex min-w-0 flex-1 flex-col">
                           <h3 className="plataforma-item-title text-[1rem] font-semibold leading-snug tracking-[-0.01em]">
                             {feature.title}
                           </h3>
-                          <div className="plataforma-item-body grid">
+                          <div className="plataforma-item-body hidden lg:grid">
                             <p className="plataforma-item-text overflow-hidden text-sm leading-relaxed">
                               {feature.description}
                             </p>
                           </div>
                         </div>
-                      </div>
 
-                      <div className="plataforma-panel plataforma-panel--inline lg:hidden">
-                        <div className="plataforma-panel-inner">
-                          <PlataformaMockup kind={feature.mockup} />
+                        <ChevronDown
+                          size={18}
+                          strokeWidth={1.5}
+                          aria-hidden="true"
+                          className="plataforma-item-chevron mt-1.5 shrink-0 lg:hidden"
+                        />
+                      </button>
+
+                      <div
+                        id={`plataforma-painel-${index}`}
+                        className="plataforma-item-panel grid lg:hidden"
+                      >
+                        <div className="overflow-hidden">
+                          <p className="plataforma-item-text pt-2 text-sm leading-relaxed">
+                            {feature.description}
+                          </p>
+
+                          <div className="plataforma-panel plataforma-panel--inline mt-4">
+                            <div className="plataforma-panel-inner">
+                              <PlataformaMockup kind={feature.mockup} />
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </li>
