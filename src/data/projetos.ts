@@ -34,6 +34,7 @@ export const PROJETOS: Projeto[] = [
     stack: ["React", "Next.js", "TypeScript"],
     tone: "accent-1",
     mockup: "streaming",
+    image: "/projetos/streaming.jpg",
   },
   {
     name: "Dashboard financeiro",
@@ -42,6 +43,7 @@ export const PROJETOS: Projeto[] = [
     stack: ["React", "Node.js", "PostgreSQL"],
     tone: "accent-2",
     mockup: "dashboard",
+    image: "/projetos/dashboard.jpg",
   },
   {
     name: "App de delivery",
@@ -50,6 +52,7 @@ export const PROJETOS: Projeto[] = [
     stack: ["React Native", "Node.js", "SQL"],
     tone: "accent-1",
     mockup: "delivery",
+    image: "/projetos/delivery.jpg",
   },
   {
     name: "E-commerce completo",
@@ -58,6 +61,7 @@ export const PROJETOS: Projeto[] = [
     stack: ["Next.js", "Stripe", "Prisma"],
     tone: "accent-2",
     mockup: "ecommerce",
+    image: "/projetos/ecommerce.jpg",
   },
   {
     name: "Bot de automação",
@@ -66,6 +70,7 @@ export const PROJETOS: Projeto[] = [
     stack: ["Python", "n8n", "OpenAI"],
     tone: "accent-1",
     mockup: "automation",
+    image: "/projetos/automacao.jpg",
   },
   {
     name: "Agente de atendimento",
@@ -74,5 +79,6 @@ export const PROJETOS: Projeto[] = [
     stack: ["LangChain", "OpenAI", "Node.js"],
     tone: "accent-2",
     mockup: "chat",
+    image: "/projetos/atendimento.jpg",
   },
 ];

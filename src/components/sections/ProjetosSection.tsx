@@ -1,11 +1,10 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import Image from "next/image";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
-import { ProjetoMockup } from "@/components/ui/ProjetoMockup";
+import { ProjetoFace } from "@/components/ui/ProjetoFace";
 import { ProjetosRing } from "@/components/ui/ProjetosRing";
 import {
   PROJETOS,
@@ -68,26 +67,10 @@ export function ProjetosSection() {
                 className="flex flex-col overflow-hidden rounded-[14px] border-[0.5px] border-accent-2/25 bg-white/[0.03]"
               >
                 <div className="relative h-[168px] shrink-0 overflow-hidden">
-                  {projeto.image ? (
-                    <Image
-                      src={projeto.image}
-                      alt=""
-                      fill
-                      sizes="(max-width: 640px) 100vw, 360px"
-                      className="object-cover"
-                    />
-                  ) : (
-                    <div aria-hidden="true" className="absolute inset-0">
-                      <span
-                        className={`absolute inset-0 ${
-                          projeto.tone === "accent-1"
-                            ? "projeto-media--accent-1"
-                            : "projeto-media--accent-2"
-                        }`}
-                      />
-                      <ProjetoMockup projeto={projeto} />
-                    </div>
-                  )}
+                  <ProjetoFace
+                    projeto={projeto}
+                    sizes="(max-width: 640px) 100vw, 360px"
+                  />
                 </div>
 
                 <div className="flex flex-col gap-3 p-6">

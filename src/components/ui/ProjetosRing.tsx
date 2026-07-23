@@ -1,9 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import Image from "next/image";
 import { useInView } from "@/hooks/useInView";
-import { ProjetoMockup } from "@/components/ui/ProjetoMockup";
+import { ProjetoFace } from "@/components/ui/ProjetoFace";
 import type { Projeto } from "@/data/projetos";
 
 const PERSPECTIVE = 2000;
@@ -190,26 +189,7 @@ export function ProjetosRing({ projetos }: { projetos: Projeto[] }) {
                   className="projeto-card absolute inset-0"
                 >
                   <div className="projeto-card-inner relative h-full w-full overflow-hidden">
-                    {projeto.image ? (
-                      <Image
-                        src={projeto.image}
-                        alt=""
-                        fill
-                        sizes="344px"
-                        className="object-cover"
-                      />
-                    ) : (
-                      <>
-                        <span
-                          className={`absolute inset-0 ${
-                            projeto.tone === "accent-1"
-                              ? "projeto-media--accent-1"
-                              : "projeto-media--accent-2"
-                          }`}
-                        />
-                        <ProjetoMockup projeto={projeto} />
-                      </>
-                    )}
+                    <ProjetoFace projeto={projeto} sizes="344px" />
                   </div>
                 </div>
 
