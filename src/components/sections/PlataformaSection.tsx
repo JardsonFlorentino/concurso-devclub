@@ -117,13 +117,13 @@ export function PlataformaSection() {
           className={
             prefersReducedMotion
               ? ""
-              : "lg:sticky lg:top-0 lg:flex lg:h-screen lg:items-center lg:overflow-hidden lg:py-10"
+              : "lg:sticky lg:top-0 lg:flex lg:h-screen lg:items-center lg:overflow-hidden lg:py-6"
           }
         >
           <div className="mx-auto grid w-full max-w-[1180px] gap-12 px-6 md:px-10 lg:max-h-full lg:min-h-0 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-center lg:gap-16">
-            <div className="flex flex-col gap-7 lg:gap-6">
-              <header className="flex flex-col gap-5 lg:gap-4">
-                <h2 className="plataforma-reveal text-[clamp(2rem,4.2vw,3.75rem)] font-semibold leading-[1.12] tracking-[-0.03em] text-white-light">
+            <div className="flex flex-col gap-7 lg:gap-4">
+              <header className="flex flex-col gap-5 lg:gap-3">
+                <h2 className="plataforma-reveal text-[clamp(2rem,4.2vw,3.75rem)] font-semibold leading-[1.12] tracking-[-0.03em] text-white-light lg:text-[clamp(1.875rem,3vw,2.75rem)]">
                   {PLATAFORMA_TITLE.before}
                   <span className="text-accent-1">
                     {PLATAFORMA_TITLE.highlight}
@@ -135,7 +135,7 @@ export function PlataformaSection() {
                 </p>
               </header>
 
-              <ul className="plataforma-reveal flex flex-col gap-1.5">
+              <ul className="plataforma-reveal flex flex-col gap-1 lg:gap-0.5">
                 {PLATAFORMA_FEATURES.map((feature, index) => {
                   const Icon = ICONS[feature.icon];
                   const current = index === active;
@@ -144,7 +144,7 @@ export function PlataformaSection() {
                     <li
                       key={feature.title}
                       data-active={current || undefined}
-                      className="plataforma-item flex flex-col gap-4 rounded-[12px] px-4 py-3 lg:py-2.5"
+                      className="plataforma-item flex flex-col gap-4 rounded-[12px] px-4 py-3 lg:py-2"
                     >
                       <div className="flex items-start gap-3.5">
                         <span className="plataforma-item-icon mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] border-[0.5px]">
