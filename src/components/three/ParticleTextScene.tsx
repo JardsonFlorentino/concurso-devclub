@@ -60,6 +60,12 @@ const DOUBLE_TAP_MS = 320;
 
 const TILT_LIMIT_DEG = 12;
 
+const DRAG_LIMIT_DEG = 40;
+const DRAG_GAIN = 0.0042;
+const DRAG_AXIS_SLOP = 8;
+const DRAG_FRICTION = 0.93;
+const DRAG_RETURN = 0.018;
+
 interface SampledPoint {
   x: number;
   y: number;
@@ -499,14 +505,61 @@ export function ParticleTextScene({
       let pointerStart = { x: 0, y: 0 };
       let lastTapAt = 0;
 
+      const dragLimit = THREE.MathUtils.degToRad(DRAG_LIMIT_DEG);
+      let dragAxis: "x" | "y" | null = null;
+      let dragPointerId: number | null = null;
+      let dragLastX = 0;
+      let dragRotation = 0;
+      let dragVelocity = 0;
+
       const onPointerDown = (event: PointerEvent) => {
         chargeStart = performance.now();
         pointerStart = { x: event.clientX, y: event.clientY };
-        dismissHintRef.current();        
-        if (event.pointerType === "touch") void requestTiltPermission();
+        dismissHintRef.current();
+        if (event.pointerType === "touch") {
+          dragAxis = null;
+          dragPointerId = event.pointerId;
+          dragLastX = event.clientX;
+          dragVelocity = 0;
+          void requestTiltPermission();
+        }
+      };
+
+      const onPointerMove = (event: PointerEvent) => {
+        if (dragPointerId !== event.pointerId) return;
+
+        const deltaX = event.clientX - pointerStart.x;
+        const deltaY = event.clientY - pointerStart.y;
+
+        if (dragAxis === null) {
+          if (Math.hypot(deltaX, deltaY) < DRAG_AXIS_SLOP) return;
+          dragAxis = Math.abs(deltaX) > Math.abs(deltaY) ? "x" : "y";
+          if (dragAxis === "x") canvasEl.setPointerCapture?.(event.pointerId);
+          dragLastX = event.clientX;
+          return;
+        }
+
+        if (dragAxis !== "x") return;
+
+        const step = (event.clientX - dragLastX) * DRAG_GAIN;
+        dragLastX = event.clientX;
+        dragRotation = THREE.MathUtils.clamp(
+          dragRotation + step,
+          -dragLimit,
+          dragLimit,
+        );
+        dragVelocity = step;
+      };
+
+      const endDrag = (event: PointerEvent) => {
+        if (dragPointerId !== event.pointerId) return;
+        if (dragAxis === "x") canvasEl.releasePointerCapture?.(event.pointerId);
+        dragPointerId = null;
+        dragAxis = null;
       };
 
       const onPointerUp = (event: PointerEvent) => {
+        endDrag(event);
         if (chargeStart === null) return;
         const heldMs = performance.now() - chargeStart;
         chargeStart = null;
@@ -538,12 +591,15 @@ export function ParticleTextScene({
         });
       };
 
-      const onPointerCancel = () => {
+      const onPointerCancel = (event: PointerEvent) => {
         chargeStart = null;
+        endDrag(event);
       };
 
       const canvasEl = renderer.domElement;
+      canvasEl.style.touchAction = "pan-y";
       canvasEl.addEventListener("pointerdown", onPointerDown);
+      canvasEl.addEventListener("pointermove", onPointerMove);
       canvasEl.addEventListener("pointerup", onPointerUp);
       canvasEl.addEventListener("pointercancel", onPointerCancel);
       canvasEl.addEventListener("pointerleave", onPointerCancel);
@@ -776,8 +832,23 @@ export function ParticleTextScene({
         tiltX += (tiltTargetX - tiltX) * 0.05;
         tiltY += (tiltTargetY - tiltY) * 0.05;
 
+        if (dragAxis !== "x") {
+          if (Math.abs(dragVelocity) > 0.00002) {
+            dragRotation = THREE.MathUtils.clamp(
+              dragRotation + dragVelocity,
+              -dragLimit,
+              dragLimit,
+            );
+            dragVelocity *= DRAG_FRICTION;
+          } else {
+            dragVelocity = 0;
+          }
+          dragRotation += (0 - dragRotation) * DRAG_RETURN;
+        }
+
         // A respiração continua sendo a base; o tilt apenas soma sobre ela.
-        points.rotation.y = Math.sin(time * 0.25) * BREATH_RADIANS + tiltY;
+        points.rotation.y =
+          Math.sin(time * 0.25) * BREATH_RADIANS + tiltY + dragRotation;
         points.rotation.x = tiltX;
 
         updateParticles();
@@ -809,6 +880,7 @@ export function ParticleTextScene({
         cancelAnimationFrame(raf);
         window.removeEventListener("resize", onResize);
         canvasEl.removeEventListener("pointerdown", onPointerDown);
+        canvasEl.removeEventListener("pointermove", onPointerMove);
         canvasEl.removeEventListener("pointerup", onPointerUp);
         canvasEl.removeEventListener("pointercancel", onPointerCancel);
         canvasEl.removeEventListener("pointerleave", onPointerCancel);
