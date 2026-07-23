@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { Header } from "@/components/Header";
 import { CustomCursor } from "@/components/CustomCursor";
+import { ScrollbarProgress } from "@/components/ScrollbarProgress";
 import "./globals.css";
 
 const inter = Inter({
@@ -37,6 +38,7 @@ export default function RootLayout({
             __html: `try{if(!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.setAttribute('data-intro','pending')}}catch(e){}`,
           }}
         />
+        <ScrollbarProgress />
         <CustomCursor />
         <Header />
         <SmoothScroll>{children}</SmoothScroll>
