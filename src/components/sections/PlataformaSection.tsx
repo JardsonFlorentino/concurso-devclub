@@ -33,6 +33,8 @@ const ICONS: Record<PlataformaIcon, LucideIcon> = {
 };
 
 const TOTAL = PLATAFORMA_FEATURES.length;
+const LAST_SHARE = 0.1;
+const STEP = (1 - LAST_SHARE) / (TOTAL - 1);
 
 export function PlataformaSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -79,10 +81,13 @@ export function PlataformaSection() {
           invalidateOnRefresh: true,
           refreshPriority: -1,
           onUpdate: (self) => {
-            const index = Math.min(
-              TOTAL - 1,
-              Math.max(0, Math.floor(self.progress * (TOTAL + 0.7))),
-            );
+            const index =
+              self.progress >= 1 - LAST_SHARE
+                ? TOTAL - 1
+                : Math.min(
+                    TOTAL - 2,
+                    Math.max(0, Math.floor(self.progress / STEP)),
+                  );
             setActive((current) => (current === index ? current : index));
           },
         });
@@ -105,7 +110,7 @@ export function PlataformaSection() {
       <div
         ref={trackRef}
         className={
-          prefersReducedMotion ? "py-[130px]" : "py-[130px] lg:h-[560vh] lg:py-0"
+          prefersReducedMotion ? "py-[130px]" : "py-[130px] lg:h-[420vh] lg:py-0"
         }
       >
         <div
