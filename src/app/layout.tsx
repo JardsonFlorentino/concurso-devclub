@@ -34,7 +34,7 @@ export default function RootLayout({
       <body className="bg-background text-foreground">
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{var s=sessionStorage.getItem('devclub:intro-seen')==='1';var r=matchMedia('(prefers-reduced-motion: reduce)').matches;if(!s&&!r){document.documentElement.setAttribute('data-intro','pending')}}catch(e){}`,
+            __html: `try{if(!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.setAttribute('data-intro','pending')}}catch(e){}`,
           }}
         />
         <CustomCursor />

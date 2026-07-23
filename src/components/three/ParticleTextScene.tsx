@@ -709,8 +709,24 @@ export function ParticleTextScene({
 
       let introTimeline: gsap.core.Timeline | null = null;
       let introStarted = false;
+      let introFailsafe = 0;
+
+      const settleIntro = () => {
+        introState.lerpScale = 1;
+        introState.cloudScale = 1;
+        introState.opacity = 1;
+        applyIntroState();
+        framingState.progress = 1;
+        applyFraming();
+        onRevealStartRef.current?.();
+        revealHintRef.current();
+        disintegrationStartTime = time;
+        disintegrationEnabled = true;
+        positionLerpScale = 1;
+      };
 
       const startIntroSequence = () => {
+        window.clearTimeout(introFailsafe);
         introTimeline = gsap.timeline();
         introTimeline
           .to(introState, {
@@ -778,9 +794,17 @@ export function ParticleTextScene({
         composer.render();
       } else {
         raf = requestAnimationFrame(animate);
+        if (introEnabled) {
+          introFailsafe = window.setTimeout(() => {
+            if (introStarted) return;
+            introStarted = true;
+            settleIntro();
+          }, 5200);
+        }
       }
 
       disposeScene = () => {
+        window.clearTimeout(introFailsafe);
         introTimeline?.kill();
         cancelAnimationFrame(raf);
         window.removeEventListener("resize", onResize);

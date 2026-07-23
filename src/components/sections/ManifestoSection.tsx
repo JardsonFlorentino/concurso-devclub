@@ -102,8 +102,8 @@ export function ManifestoSection() {
     >
       <DustField className="pointer-events-none absolute inset-0 z-0 h-full w-full" />
 
-      <div ref={runwayRef} className="relative z-10 h-[140vh]">
-        <div className="sticky top-0 flex h-screen items-center justify-center px-6 md:px-10">
+      <div ref={runwayRef} className="relative z-10 h-[116vh] md:h-[140vh]">
+        <div className="sticky top-0 flex h-[74vh] items-center justify-center px-6 md:h-screen md:px-10">
           <div className="mx-auto flex max-w-[900px] flex-col items-center text-center">
             <h2
               ref={headlineRef}
@@ -141,7 +141,7 @@ export function ManifestoSection() {
         </div>
       </div>
 
-      <div className="relative z-10 -mt-[180px] px-6 pb-[130px] md:px-10">
+      <div className="relative z-10 -mt-[90px] px-6 pb-[110px] md:-mt-[180px] md:px-10 md:pb-[130px]">
         <div className="mx-auto grid max-w-[1100px] grid-cols-2 gap-4 md:gap-5 lg:grid-cols-4">
           {MANIFESTO_STATS.map((stat) => (
             <StatCounter key={stat.label} stat={stat} />
