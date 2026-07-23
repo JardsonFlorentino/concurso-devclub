@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
@@ -13,6 +13,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+import { PlataformaMockup } from "@/components/ui/PlataformaMockup";
 import {
   PLATAFORMA_DESCRIPTION,
   PLATAFORMA_FEATURES,
@@ -31,8 +32,12 @@ const ICONS: Record<PlataformaIcon, LucideIcon> = {
   Trophy,
 };
 
+const TOTAL = PLATAFORMA_FEATURES.length;
+
 export function PlataformaSection() {
   const sectionRef = useRef<HTMLElement | null>(null);
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const [active, setActive] = useState(0);
   const prefersReducedMotion = usePrefersReducedMotion();
 
   useEffect(() => {
@@ -58,56 +63,142 @@ export function PlataformaSection() {
     return () => context.revert();
   }, [prefersReducedMotion]);
 
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    const media = gsap.matchMedia();
+
+    media.add(
+      "(min-width: 1024px) and (prefers-reduced-motion: no-preference)",
+      () => {
+        const trigger = ScrollTrigger.create({
+          trigger: track,
+          start: "top top",
+          end: "bottom bottom",
+          onUpdate: (self) => {
+            const index = Math.min(
+              TOTAL - 1,
+              Math.max(0, Math.floor(self.progress * (TOTAL + 0.7))),
+            );
+            setActive((current) => (current === index ? current : index));
+          },
+        });
+
+        return () => trigger.kill();
+      },
+    );
+
+    return () => media.revert();
+  }, [prefersReducedMotion]);
+
   return (
     <section
       id="plataforma"
       ref={sectionRef}
-      className="relative overflow-hidden bg-background-deep py-[130px]"
+      className="relative bg-background-deep"
     >
-      <div className="relative z-10 mx-auto grid max-w-[1180px] gap-14 px-6 md:px-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:items-start lg:gap-20">
-        <header className="flex flex-col gap-5 lg:sticky lg:top-32">
-          <h2 className="plataforma-reveal text-[clamp(2rem,4.2vw,3.75rem)] font-semibold leading-[1.12] tracking-[-0.03em] text-white-light">
-            {PLATAFORMA_TITLE.before}
-            <span className="text-accent-1">{PLATAFORMA_TITLE.highlight}</span>
-            {PLATAFORMA_TITLE.after}
-          </h2>
-          <p className="plataforma-reveal max-w-[46ch] text-[0.9375rem] leading-relaxed text-gray-300">
-            {PLATAFORMA_DESCRIPTION}
-          </p>
-        </header>
-
-        <div className="relative">
-          <span
-            aria-hidden="true"
-            data-parallax="40"
-            className="plataforma-glow pointer-events-none absolute -inset-10 -z-10"
-          />
-
-          <ul className="grid gap-4 sm:grid-cols-2">
-            {PLATAFORMA_FEATURES.map((feature) => {
-              const Icon = ICONS[feature.icon];
-
-              return (
-                <li
-                  key={feature.title}
-                  className="plataforma-reveal group flex flex-col gap-4 rounded-[14px] border-[0.5px] border-accent-2/25 bg-white/[0.03] p-6 backdrop-blur-sm transition-[border-color,background-color,transform] duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] hover:-translate-y-1 hover:border-accent-2/50 hover:bg-white/[0.05]"
-                >
-                  <span className="flex h-10 w-10 items-center justify-center rounded-[14px] border-[0.5px] border-accent-1/25 bg-accent-1/[0.08] text-accent-1 transition-colors duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:border-accent-1/50">
-                    <Icon size={18} strokeWidth={1.5} aria-hidden="true" />
+      <div
+        ref={trackRef}
+        className={
+          prefersReducedMotion ? "py-[130px]" : "py-[130px] lg:h-[560vh] lg:py-0"
+        }
+      >
+        <div
+          className={
+            prefersReducedMotion
+              ? ""
+              : "lg:sticky lg:top-0 lg:flex lg:h-screen lg:items-center"
+          }
+        >
+          <div className="mx-auto grid w-full max-w-[1180px] gap-12 px-6 md:px-10 lg:grid-cols-[minmax(0,0.92fr)_minmax(0,1.08fr)] lg:items-center lg:gap-16">
+            <div className="flex flex-col gap-7 lg:gap-6">
+              <header className="flex flex-col gap-5">
+                <h2 className="plataforma-reveal text-[clamp(2rem,4.2vw,3.75rem)] font-semibold leading-[1.12] tracking-[-0.03em] text-white-light">
+                  {PLATAFORMA_TITLE.before}
+                  <span className="text-accent-1">
+                    {PLATAFORMA_TITLE.highlight}
                   </span>
+                  {PLATAFORMA_TITLE.after}
+                </h2>
+                <p className="plataforma-reveal max-w-[46ch] text-[0.9375rem] leading-relaxed text-gray-300">
+                  {PLATAFORMA_DESCRIPTION}
+                </p>
+              </header>
 
-                  <div className="flex flex-col gap-2">
-                    <h3 className="text-[1rem] font-semibold leading-snug tracking-[-0.01em] text-white-light">
-                      {feature.title}
-                    </h3>
-                    <p className="text-sm leading-relaxed text-gray-300">
-                      {feature.description}
-                    </p>
+              <ul className="plataforma-reveal flex flex-col gap-1.5">
+                {PLATAFORMA_FEATURES.map((feature, index) => {
+                  const Icon = ICONS[feature.icon];
+                  const current = index === active;
+
+                  return (
+                    <li
+                      key={feature.title}
+                      data-active={current || undefined}
+                      className="plataforma-item flex flex-col gap-4 rounded-[12px] px-4 py-3 lg:py-2.5"
+                    >
+                      <div className="flex items-start gap-3.5">
+                        <span className="plataforma-item-icon mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] border-[0.5px]">
+                          <Icon size={17} strokeWidth={1.5} aria-hidden="true" />
+                        </span>
+
+                        <div className="flex flex-col">
+                          <h3 className="plataforma-item-title text-[1rem] font-semibold leading-snug tracking-[-0.01em]">
+                            {feature.title}
+                          </h3>
+                          <div className="plataforma-item-body grid">
+                            <p className="plataforma-item-text overflow-hidden text-sm leading-relaxed">
+                              {feature.description}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="plataforma-panel plataforma-panel--inline lg:hidden">
+                        <div className="plataforma-panel-inner">
+                          <PlataformaMockup kind={feature.mockup} />
+                        </div>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+
+            <div className="relative hidden lg:block">
+              <span
+                aria-hidden="true"
+                className="plataforma-glow pointer-events-none absolute -inset-12 -z-10"
+              />
+
+              <div className="relative aspect-[4/3] w-full">
+                {PLATAFORMA_FEATURES.map((feature, index) => (
+                  <div
+                    key={feature.title}
+                    aria-hidden={index !== active}
+                    data-active={index === active || undefined}
+                    className="plataforma-panel plataforma-panel--stage absolute inset-0"
+                  >
+                    <div className="plataforma-panel-inner">
+                      <PlataformaMockup kind={feature.mockup} />
+                    </div>
                   </div>
-                </li>
-              );
-            })}
-          </ul>
+                ))}
+              </div>
+
+              <div className="mt-7 flex items-center justify-center gap-2">
+                {PLATAFORMA_FEATURES.map((feature, index) => (
+                  <span
+                    key={feature.title}
+                    aria-hidden="true"
+                    className={`h-1 rounded-full transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                      index === active ? "w-8 bg-accent-1" : "w-2 bg-white/20"
+                    }`}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
